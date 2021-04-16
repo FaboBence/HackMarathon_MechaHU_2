@@ -1,16 +1,14 @@
 # Hack Kosice Marathon: Your project name
 
-*A template for projects submitted to HK Marathon 2021. You can [fork this repository](https://docs.github.com/en/github/getting-started-with-github/fork-a-repo) and use it as a starting point.*
-
 ## Team
 
-*Your name here!*
+**MechaHU**
 
 ### Team members
 
-- Teammate 1, School
-- Teammate 2, School
-- Teammate 3, School
+- Bence Fabó, Budapest University of Technology and Economics
+- Mihály Makovsky, Budapest University of Technology and Economics
+- Gellért Csapodi, Budapest University of Technology and Economics
 
 ## Description
 
@@ -37,7 +35,3 @@
 ## Next steps
 
 *What do you need to do next to turn this prototype into a working solution?*
-
-## License
-
-*This repository includes an [unlicense](http://unlicense.org/) statement though you may want [to choose a different license](https://choosealicense.com/).*
