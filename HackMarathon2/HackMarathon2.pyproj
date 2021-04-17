@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>cfc381cd-0e50-4ce6-ac5b-48c8c94e9adc</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>ServerComm.py</StartupFile>
+    <StartupFile>Streamer.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -22,6 +22,12 @@
   </PropertyGroup>
   <ItemGroup>
     <Compile Include="ClientComm.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Receiver.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="Streamer.py">
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="ServerComm.py" />
