@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>cfc381cd-0e50-4ce6-ac5b-48c8c94e9adc</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>HackMarathon2.py</StartupFile>
+    <StartupFile>ServerComm.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -21,7 +21,10 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="HackMarathon2.py" />
+    <Compile Include="ClientComm.py">
+      <SubType>Code</SubType>
+    </Compile>
+    <Compile Include="ServerComm.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in
