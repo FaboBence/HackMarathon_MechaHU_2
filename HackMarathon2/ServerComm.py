@@ -18,6 +18,7 @@ def accept_wrapper(sock):
 def service_connection(key, mask):
     sock = key.fileobj
     data = key.data
+    print('Mask: '+ repr(mask) + '   selectors.EVENT_READ: ' + repr(selectors.EVENT_READ) + '    selectors.EVENT_WRITE: ' + repr(selectors.EVENT_WRITE))
     if mask & selectors.EVENT_READ:
         recv_data = sock.recv(1024)  # Should be ready to read
         if recv_data:
