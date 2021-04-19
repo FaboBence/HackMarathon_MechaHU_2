@@ -3,17 +3,18 @@ from PIL import Image, ImageTk
 
 RADIUS = 20
 
-class window(tk.Tk):
-    def __init__(self):
+class window(tk.Frame):
+    def __init__(self,root):
         global image # we need it because tkinters image handler has some bug in it...
-        super().__init__()
-        self.title("Próba GUI")
+        super().__init__(root)
+        self.root = root
+        root.title("Próba GUI")
         img = Image.open('OpenOffice.png')
         image = ImageTk.PhotoImage(img)
         w=img.size[0]
         h=img.size[1]
-        self.geometry(f"{w}x{h}")
-        self.minsize(width=200, height=200)
+        root.geometry(f"{w}x{h}")
+        root.minsize(width=200, height=200)
         self.isMoving = False
         self.canvas = tk.Canvas(width = 1000, height=550, bg='white')
         self.canvas.pack(expand=tk.YES)
@@ -90,5 +91,7 @@ class User():
 
 
 if __name__ == '__main__':
-    root = window()
+    root = tk.Tk()
+    mainWindow = window(root)
+    mainWindow.pack()
     root.mainloop()
