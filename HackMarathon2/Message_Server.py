@@ -36,24 +36,27 @@ class Message:
 				self._recv_buffer += data
 			else:
 				raise RuntimeError("Client closed.")
-			# Decoding data:
-			test = struct.unpack(">H", self._recv_buffer[:2])[0]
-			print('Test: ' + str(test))  # DEBUG
-			self._recv_buffer = self._recv_buffer[2:]
-			self._set_selector_events_mask("w")
+		# Decoding data:
+		global test
+		test = struct.unpack(">H", self._recv_buffer[:2])[0]
+		print('Test: ' + str(test) + '  _recv_buffer: ' + repr(self._recv_buffer))  # DEBUG
+		self._recv_buffer = self._recv_buffer[2:]
+		self._set_selector_events_mask("w")
 
 	def write(self):
 		print('Write') # DEBUG
 		self._send_buffer += struct.pack(">H",test)
+		print('Test: ' + str(test) + '  _recv_buffer: ' + repr(self._send_buffer))  # DEBUG
 		try:
 			sent = self.sock.send(self._send_buffer)
 		except BlockingIOError:
 			pass
 		else:
 			self._send_buffer = self._send_buffer[sent:]
-			if sent and not self._send_buffer:
-				self.close()
+			print('   Setting: READ')
 			self._set_selector_events_mask("r")
+			#if sent and not self._send_buffer:
+			#	self.close()
 	def close(self):
 		print("Closing connection to ", self.addr)
 		try:
