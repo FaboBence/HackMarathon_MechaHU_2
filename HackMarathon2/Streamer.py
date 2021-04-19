@@ -2,9 +2,10 @@ import socket, cv2, pickle,struct
 
 # Socket Create
 server_socket = socket.socket(socket.AF_INET,socket.SOCK_STREAM)
-#host_name  = socket.gethostname()
+host_ip  = socket.gethostname()
 #host_ip = socket.gethostbyname(host_name)
-host_ip = "127.0.0.1"
+#host_ip = '92.249.182.92'
+host_ip = '127.0.0.1'
 print('HOST IP:',host_ip)
 port = 65432
 socket_address = (host_ip,port)
