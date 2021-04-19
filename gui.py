@@ -3,17 +3,18 @@ from PIL import Image, ImageTk
 
 RADIUS = 20
 
-class window(tk.Tk):
-    def __init__(self):
+class window(tk.Frame):
+    def __init__(self,root):
         global image # we need it because tkinters image handler has some bug in it...
-        super().__init__()
-        self.title("Próba GUI")
+        super().__init__(root)
+        self.root = root
+        root.title("Próba GUI")
         img = Image.open('OpenOffice.png')
         image = ImageTk.PhotoImage(img)
         w=img.size[0]
         h=img.size[1]
-        self.geometry(f"{w}x{h}")
-        self.minsize(width=200, height=200)
+        root.geometry(f"{w}x{h}")
+        root.minsize(width=200, height=200)
         self.isMoving = False
         self.canvas = tk.Canvas(width = 1000, height=550, bg='white')
         self.canvas.pack(expand=tk.YES)
@@ -21,24 +22,27 @@ class window(tk.Tk):
         self.canvas.create_image(0,0,image = image, anchor=tk.NW)
         self.circle = self.canvas.create_oval(20,20,60,60,fill="blue")
         #canvas.create_rectangle(0,0,250,170,fill="blue")
-        self.my_label = tk.Label(self,text="")
+        self.my_label = tk.Label(self,text="")#just for testing
         self.my_label.pack()
         
-        self.canvas.bind('<B1-Motion>',self.move)
-        self.canvas.bind('<ButtonRelease-1>',self.release)
+        self.canvas.bind('<B1-Motion>',self.move) #"drag-and-drop" action
+        self.canvas.bind('<ButtonRelease-1>',self.release) #when you relase the left mose button
+        self.create_rooms()
+        self.create_users()
+        
+        
+    def create_rooms(self): #init rooms
         self.rooms = []
         room1 = Room(0,0,250,170)
-        worker1 = User('Gege', room1)
-        print(worker1.room.id)
-        print(room1.workers[0].name)
         room2 = Room(246,15,400,160)
-        worker1.move_to(room2)
-        print(room1.workers)
-        print(room2.workers)
-        print(worker1.room.id)
-        #print(room2.id)
         self.rooms.append(room1)
         self.rooms.append(room2)
+
+    def create_users(self):#init users
+        self.you = User('Gege', self.rooms[0]) #The actual user
+        self.users=[]
+        self.users.append(self.you)
+
     def move(self,e):
         pos = self.canvas.coords(self.circle)
         if e.x>=pos[0] and e.x<=pos[2] and e.y>=pos[1] and e.y <=pos[3]:
@@ -51,6 +55,8 @@ class window(tk.Tk):
             for i in self.rooms:
                 if e.x>=i.tlx and e.x<=i.brx and e.y>=i.tly and e.y <=i.bry:
                     self.canvas.coords(self.circle,i.center[0]-RADIUS, i.center[1]-RADIUS,i.center[0]+RADIUS, i.center[1]+RADIUS)
+                    self.you.move_to(i)
+                    self.my_label.config(text=f"You are in room: {self.you.room.id}")
                     break
             self.isMoving = False
 class Room():
@@ -85,5 +91,7 @@ class User():
 
 
 if __name__ == '__main__':
-    root = window()
+    root = tk.Tk()
+    mainWindow = window(root)
+    mainWindow.pack()
     root.mainloop()
