@@ -28,7 +28,15 @@ class window(tk.Tk):
         self.canvas.bind('<ButtonRelease-1>',self.release)
         self.rooms = []
         room1 = Room(0,0,250,170)
+        worker1 = User('Gege', room1)
+        print(worker1.room.id)
+        print(room1.workers[0].name)
         room2 = Room(246,15,400,160)
+        worker1.move_to(room2)
+        print(room1.workers)
+        print(room2.workers)
+        print(worker1.room.id)
+        #print(room2.id)
         self.rooms.append(room1)
         self.rooms.append(room2)
     def move(self,e):
@@ -46,14 +54,34 @@ class window(tk.Tk):
                     break
             self.isMoving = False
 class Room():
+    id = 0
     def __init__(self,tlx,tly,brx,bry):
         self.tlx=tlx #top left corner
         self.tly=tly
         self.brx=brx
         self.bry=bry
         self.center = ((tlx+brx)/2 , (tly+bry)/2)
+        self.id = Room.id
+        Room.id += 1
+        self.workers = []
+    def add_worker(self, worker):
+        self.workers.append(worker)
+        worker.room=self
+    def remove_worker(self,worker):
+        self.workers.remove(worker)
 
-
+class User():
+    id = 0
+    def __init__(self,name,where):
+        self.name = name
+        self.room = where
+        self.id = User.id
+        User.id += 1
+        where.add_worker(self)
+    def move_to(self,where):
+        self.room.remove_worker(self)
+        self.room = where
+        where.add_worker(self)
 
 
 if __name__ == '__main__':
