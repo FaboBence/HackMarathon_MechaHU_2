@@ -4,10 +4,11 @@ from PIL import Image, ImageTk
 RADIUS = 20
 
 class window(tk.Frame):
-    def __init__(self,root):
+    def __init__(self,root,name):
         global image # we need it because tkinters image handler has some bug in it...
         super().__init__(root)
         self.root = root
+        self.name = name
         root.title("Próba GUI")
         img = Image.open('OpenOffice.png')
         image = ImageTk.PhotoImage(img)
@@ -39,7 +40,7 @@ class window(tk.Frame):
         self.rooms.append(room2)
 
     def create_users(self):#init users
-        self.you = User('Gege', self.rooms[0]) #The actual user
+        self.you = User(self.name, self.rooms[0]) #The actual user
         self.users=[]
         self.users.append(self.you)
 
@@ -56,7 +57,7 @@ class window(tk.Frame):
                 if e.x>=i.tlx and e.x<=i.brx and e.y>=i.tly and e.y <=i.bry:
                     self.canvas.coords(self.circle,i.center[0]-RADIUS, i.center[1]-RADIUS,i.center[0]+RADIUS, i.center[1]+RADIUS)
                     self.you.move_to(i)
-                    self.my_label.config(text=f"You are in room: {self.you.room.id}")
+                    self.my_label.config(text=f"{self.you.name} is in room: {self.you.room.id}")
                     break
             self.isMoving = False
 class Room():
@@ -89,9 +90,35 @@ class User():
         self.room = where
         where.add_worker(self)
 
+class name_input_window(tk.Frame):
+    def __init__(self, root, *args, **kwargs):
+        super().__init__(root, *args, **kwargs)
+        self.root = root
+        root.title("Próba GUI")
+        root.geometry("600x400")
+        root.minsize(width=200, height=200)
+        self.label = tk.Label(root, text="Enter your name: ")
+        self.label.pack()
+        self.entry = tk.Entry(root)
+        self.entry.pack()
+        self.button = tk.Button(root, text="OK", command=self.ok)
+        self.button.pack()
+        self.root.bind('<Return>', self.ok)
+    def ok(self,event):
+        if len(self.entry.get())>0:
+            self.name=self.entry.get()
+            self.root.destroy()
+        else:
+            print("You must write a name in!")
 
 if __name__ == '__main__':
-    root = tk.Tk()
-    mainWindow = window(root)
+    input_form = tk.Tk() #Starting a form where we ask for the name of the user
+    input_window = name_input_window(input_form)
+    input_window.pack()
+    input_form.mainloop()
+    name = input_window.name
+    del input_form #We dont need it anymore
+    root = tk.Tk() #Starting the main application
+    mainWindow = window(root, name)
     mainWindow.pack()
     root.mainloop()
