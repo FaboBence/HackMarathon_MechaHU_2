@@ -16,7 +16,7 @@ lsock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
 lsock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
 lsock.bind((host, port))
 lsock.listen()
-print("listening on", (host, port))
+print("Listening on", (host, port))
 lsock.setblocking(False)
 sel.register(lsock, selectors.EVENT_READ, data=None)
 

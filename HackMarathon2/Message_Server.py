@@ -7,7 +7,7 @@ class Message:
 		self.sock = socket
 		self.addr = addr
 		self.Name = None    # String
-		self.roomID = None  # Int
+		self.RoomID = None  # Int
 		self._recv_buffer = b""
 		self._send_buffer = b""
 		self._headerlen = 2 # Bytes
@@ -40,9 +40,10 @@ class Message:
 			else:
 				raise ClientDisconnectError()
 			# Decoding data:
-			_decode_messagelen()
+			self._decode_messagelen()
 			if self._messagelen is not None:
-				_decode_message()
+				self._decode_message()
+			print("  ",self.Name,self.RoomID) # DEBUG
 			self._set_selector_events_mask("w")
 
 	def _decode_messagelen(self):
@@ -54,15 +55,15 @@ class Message:
 		if len(self._recv_buffer) >= self._messagelen:
 			tmp = self._recv_buffer[:self._messagelen].decode('utf-8')
 			self._recv_buffer = self._recv_buffer[self._messagelen:]
-			msg_dict = json.loads(tmp) # received data in dictionary
+			msg_dict = json.loads(tmp) # received message is a dictionary
 			if msg_dict.get("Name") is not None:
 				self.Name = msg_dict.get("Name")
 			if msg_dict.get("RoomID") is not None:
-				self.roomID = msg_dict.get("RoomID")
+				self.RoomID = msg_dict.get("RoomID")
 
 	def write(self):
-		print('Write') # DEBUG
-		self._send_buffer += struct.pack(">H",test)
+		print('Writing to', self.addr) # DEBUG
+		self._encode_message()
 		try:
 			sent = self.sock.send(self._send_buffer)
 		except BlockingIOError:
@@ -70,6 +71,18 @@ class Message:
 		else:
 			self._send_buffer = self._send_buffer[sent:]
 			self._set_selector_events_mask("r")
+
+	def _encode_message(self):
+		tmp_list = []
+		map = self.selector.get_map()
+		for i in map:
+			#print("  map["+str(i)+"]: " + repr(map[i]))
+			if map[i].data is not None:
+				tmp_dict = {"Name": map[i].data.Name, "RoomID": map[i].data.RoomID}
+				print("  ",tmp_dict) # DEBUG
+				tmp_list.append(tmp_dict)
+		msg = json.dumps(tmp_list, ensure_ascii=False).encode('utf-8')
+		self._send_buffer += struct.pack(">H",len(msg)) + msg
 
 	def close(self):
 		print("Closing connection to ", self.addr)

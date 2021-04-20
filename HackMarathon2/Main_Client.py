@@ -14,13 +14,12 @@ def start_connection(host,port,count):
 
 sel = selectors.DefaultSelector()
 host, port = ['127.0.0.1', 65432]
-start_connection(host, port, 2)
+start_connection(host, port, 5)
 
 try:
     while True:
         print("Waiting for events = sel.select()")
         events = sel.select(timeout=1)
-        print('  Mask:' + str(events[0][1]))
         for key, mask in events:
             message = key.data
             try:

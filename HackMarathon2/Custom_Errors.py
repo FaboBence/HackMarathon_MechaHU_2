@@ -3,7 +3,7 @@ class ClientDisconnectError(Exception):
 class ServerDisconnectError(Exception):
 	pass
 
-import json
+#import json
 
 #byteArray = b'[{"Name": "Bence Fabo", "RoomID": 2}, {"Name": "Gellert Csapodi", "RoomID": 3}]'
 
