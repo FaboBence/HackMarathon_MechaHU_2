@@ -1,6 +1,6 @@
 import tkinter as tk
 from PIL import Image, ImageTk
-
+import cv2
 RADIUS = 20
 
 class window(tk.Frame):
@@ -19,18 +19,16 @@ class window(tk.Frame):
         self.isMoving = False
         self.canvas = tk.Canvas(width = 1000, height=550, bg='white')
         self.canvas.pack(expand=tk.YES)
-        
         self.canvas.create_image(0,0,image = image, anchor=tk.NW)
         self.circle = self.canvas.create_oval(20,20,60,60,fill="blue")
         #canvas.create_rectangle(0,0,250,170,fill="blue")
-        self.my_label = tk.Label(self,text="")#just for testing
-        self.my_label.pack()
+        self.my_label = tk.Label(self,text="")#!Test
+        self.my_label.pack()#!Test
         
         self.canvas.bind('<B1-Motion>',self.move) #"drag-and-drop" action
         self.canvas.bind('<ButtonRelease-1>',self.release) #when you relase the left mose button
         self.create_rooms()
         self.create_users()
-        
         
     def create_rooms(self): #init rooms
         self.rooms = []
@@ -97,6 +95,7 @@ class name_input_window(tk.Frame):
         root.title("Próba GUI")
         root.geometry("600x400")
         root.minsize(width=200, height=200)
+        self.name=None
         self.label = tk.Label(root, text="Enter your name: ")
         self.label.pack()
         self.entry = tk.Entry(root)
@@ -104,12 +103,39 @@ class name_input_window(tk.Frame):
         self.button = tk.Button(root, text="OK", command=self.ok)
         self.button.pack()
         self.root.bind('<Return>', self.ok)
-    def ok(self,event):
+
+    def ok(self,event=None):
         if len(self.entry.get())>0:
             self.name=self.entry.get()
             self.root.destroy()
         else:
             print("You must write a name in!")
+
+class video_call(tk.Frame):
+    def __init__(self, root):
+        super().__init__(root)
+        self.root = root
+        img = cv2.imread("o1.jpg")
+        print(img)
+        img = Image.fromarray(img)
+        img = ImageTk.PhotoImage(img)
+        self.l2=tk.Label(root, image=img)
+        self.l2.pack()
+        self.cap = cv2.VideoCapture(0)
+        self.root.after(1000,self.refresh)
+
+    def refresh(self):
+        print("ping")
+        ret, frame = self.cap.read()
+        img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
+        if ret:
+            img = Image.fromarray(img)
+            img = ImageTk.PhotoImage(img)
+            self.l2.configure(image=img)
+            self.l2.image = img
+        else:
+            print("Some error occured...")
+        self.root.after(20,self.refresh)
 
 if __name__ == '__main__':
     input_form = tk.Tk() #Starting a form where we ask for the name of the user
@@ -118,7 +144,12 @@ if __name__ == '__main__':
     input_form.mainloop()
     name = input_window.name
     del input_form #We dont need it anymore
-    root = tk.Tk() #Starting the main application
-    mainWindow = window(root, name)
-    mainWindow.pack()
-    root.mainloop()
+    if name is not None:
+        root = tk.Tk() #Starting the main application
+        mainWindow = window(root, name)
+        mainWindow.pack()
+        root.mainloop()
+    new_window = tk.Tk()
+    v_call = video_call(new_window)
+    v_call.pack()
+    new_window.mainloop()
