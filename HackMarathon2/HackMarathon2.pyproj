@@ -24,6 +24,9 @@
     <Compile Include="ClientComm.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Custom_Errors.py">
+      <SubType>Code</SubType>
+    </Compile>
     <Compile Include="Main_Client.py">
       <SubType>Code</SubType>
     </Compile>
