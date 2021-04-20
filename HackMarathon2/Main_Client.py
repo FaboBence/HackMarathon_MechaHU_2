@@ -9,7 +9,7 @@ def start_connection(host,port,count):
         sock.connect_ex(addr)  # Connecting to server
         print("Connecting to: " + repr(addr))
         events = selectors.EVENT_WRITE #| selectors.EVENT_READ
-        message = Message_Client.Message(sel, sock, addr)
+        message = Message_Client.Message(sel, sock, addr, Name=str(i),RoomID=i)
         sel.register(sock, events, data=message)
 
 sel = selectors.DefaultSelector()
