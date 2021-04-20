@@ -1,5 +1,7 @@
 import selectors, struct
 
+test = 0
+
 class Message:
 	def __init__(self, selector, socket, addr):
 		self.selector = selector
@@ -7,7 +9,6 @@ class Message:
 		self.addr = addr
 		self._recv_buffer = b""
 		self._send_buffer = b""
-		self.test = 1
 		self.message_queued = False
 
 	def _set_selector_events_mask(self, mode):
@@ -37,15 +38,17 @@ class Message:
 			else:
 				raise RuntimeError("Client closed.")
 			# Decoding data:
-			self.test = struct.unpack(">H", self._recv_buffer[:2])[0]
-			print(self.test)
+			global test
+			test = struct.unpack(">H", self._recv_buffer[:2])[0]
+			print('Test: ' + str(test) + '  _recv_buffer: ' + repr(self._recv_buffer))  # DEBUG
 			self._recv_buffer = self._recv_buffer[2:]
 			self._set_selector_events_mask("w")
 
 	def write(self):
-		print('Write') # DEBUG
 		if not self.message_queued:
-			self._send_buffer += struct.pack(">H",2)
+			print('Write') # DEBUG
+			self._send_buffer += struct.pack(">H",3)
+			print('Writing: ' + str(3) + '  _recv_buffer: ' + repr(self._send_buffer))  # DEBUG
 			try:
 				sent = self.sock.send(self._send_buffer)
 			except BlockingIOError:
@@ -53,6 +56,7 @@ class Message:
 			else:
 				self._send_buffer = self._send_buffer[sent:]
 				self._set_selector_events_mask("r")
+				self.message_queued = True
 
 	def close(self):
 		print("Closing connection to ", self.addr)
