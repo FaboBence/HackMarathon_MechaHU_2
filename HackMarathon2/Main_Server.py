@@ -21,6 +21,8 @@ for i,room in enumerate(Week_Schedule[day]):
 	if reg_id != -1:
 		Name = dataframe[reg_id][0]
 		Name_Room_dict.update([(Name,i)])
+print(Name_Room_dict)
+#Name_Room_dict = {"Misi":1,"Gellert":2,"Bence":3}
 
 # Setting up server
 limit = 1 # Timeout [seconds]

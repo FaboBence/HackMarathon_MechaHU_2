@@ -1,20 +1,21 @@
 import socket, selectors, Message_Client
 from Custom_Errors import *
 
-def start_connection(host,port,count):
+def start_connection(host,port):
     addr = (host, port)
-    for i in range(count):
+    names = ["Bence","Misi","Gellert"]
+    for name in names:
         sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         sock.setblocking(False)
         sock.connect_ex(addr)  # Connecting to server
         print("Connecting to: " + repr(addr))
         events = selectors.EVENT_WRITE #| selectors.EVENT_READ
-        message = Message_Client.Message(sel, sock, addr, Name=str(i),RoomID=i)
+        message = Message_Client.Message(sel, sock, addr, Name=name,RoomID=0)
         sel.register(sock, events, data=message)
 
 sel = selectors.DefaultSelector()
 host, port = ['127.0.0.1', 65432]
-start_connection(host, port, 5)
+start_connection(host, port)
 
 try:
     while True:
