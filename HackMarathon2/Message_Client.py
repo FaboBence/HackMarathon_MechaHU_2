@@ -1,7 +1,7 @@
 import selectors, struct, json
 from Custom_Errors import *
 
-test = 0
+#test = 0
 
 class User:
 	def __init__(self,Name,RoomID):
@@ -84,8 +84,8 @@ class Message:
 					self.Users.append(User(Name,RoomID))
 
 	def write(self):
-		global test
-		if test < 3*2:
+		#global test
+		if True:#test < 3*2:
 			print('Write ',self.Name) # DEBUG
 			self._encode_message()
 			try:
@@ -97,12 +97,9 @@ class Message:
 				self._set_selector_events_mask("r")
 		else:
 			self.close()
-		test += 1
+		#test += 1
 
 	def _encode_message(self):
-		global test
-		if test > 4:
-			pass
 		tmp_dict = {"Name": self.Name, "RoomID": self.RoomID}
 		print("  ",tmp_dict)
 		msg = json.dumps(tmp_dict, ensure_ascii=False).encode('utf-8')
