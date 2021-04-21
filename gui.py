@@ -68,9 +68,13 @@ class window(tk.Frame):
     def create_rooms(self): #init rooms
         self.rooms = []
         room1 = Room(0,0,250,170,self.ratio)
-        room2 = Room(246,15,400,160,self.ratio)
+        room2 = Room(250,15,400,160,self.ratio)
+        room3 = Room(0,170,250,400,self.ratio)
+        room4 = Room(250,170,500,500, self.ratio)
         self.rooms.append(room1)
         self.rooms.append(room2)
+        self.rooms.append(room3)
+        self.rooms.append(room4)
 
     def create_users(self):#init users
         self.you = User(self.name, self.rooms[0]) #The actual user
@@ -117,8 +121,8 @@ class window(tk.Frame):
                     print(f"{self.you.name} is in room: {self.you.room.id}")
                     break
             self.isMoving = False
-        print(self.my_position())
-        self.update_positions([self.my_position(), {"Name": "Joe", "RoomID":1}])
+        #!print(self.my_position())
+        #!self.update_positions([self.my_position(), {"Name": "Joe", "RoomID":1}])
 class Room():
     id = 0
     def __init__(self,tlx,tly,brx,bry,ratio=1):
