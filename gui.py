@@ -71,10 +71,12 @@ class window(tk.Frame):
         room2 = Room(250,15,400,160,self.ratio)
         room3 = Room(0,170,250,400,self.ratio)
         room4 = Room(250,170,500,500, self.ratio)
+        room5 = Room(500,0,700,170, self.ratio)
         self.rooms.append(room1)
         self.rooms.append(room2)
         self.rooms.append(room3)
         self.rooms.append(room4)
+        self.rooms.append(room5)
 
     def create_users(self):#init users
         self.you = User(self.name, self.rooms[0]) #The actual user
