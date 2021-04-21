@@ -27,6 +27,7 @@
     <Compile Include="Custom_Errors.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="gui.py" />
     <Compile Include="Main_Client.py">
       <SubType>Code</SubType>
     </Compile>

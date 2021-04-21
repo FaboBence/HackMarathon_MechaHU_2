@@ -9,7 +9,7 @@ class window(tk.Frame):
         super().__init__(root)
         self.root = root
         self.name = name
-        root.title("Próba GUI")
+        root.title("Online Office")
         #root.attributes('-fullscreen', True)
         #root.geometry(f"{w}x{h}")
         root.state('zoomed')
@@ -159,7 +159,7 @@ class name_input_window(tk.Frame):
     def __init__(self, root, *args, **kwargs):
         super().__init__(root, *args, **kwargs)
         self.root = root
-        root.title("Próba GUI")
+        root.title("Login")
         root.geometry("600x400")
         root.minsize(width=200, height=200)
         self.name=None
