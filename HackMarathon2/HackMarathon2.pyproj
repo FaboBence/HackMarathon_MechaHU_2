@@ -4,7 +4,7 @@
     <SchemaVersion>2.0</SchemaVersion>
     <ProjectGuid>cfc381cd-0e50-4ce6-ac5b-48c8c94e9adc</ProjectGuid>
     <ProjectHome>.</ProjectHome>
-    <StartupFile>recording.py</StartupFile>
+    <StartupFile>Main_Server.py</StartupFile>
     <SearchPath>
     </SearchPath>
     <WorkingDirectory>.</WorkingDirectory>
@@ -39,6 +39,7 @@
     <Compile Include="Message_Server.py">
       <SubType>Code</SubType>
     </Compile>
+    <Compile Include="Office_allocation.py" />
     <Compile Include="Receiver.py">
       <SubType>Code</SubType>
     </Compile>

@@ -2,10 +2,12 @@ import selectors, struct, json
 from Custom_Errors import *
 
 class Message:
-	def __init__(self, selector, socket, addr):
+	def __init__(self, selector, socket, addr, schedule):
 		self.selector = selector
 		self.sock = socket
 		self.addr = addr
+		self.just_connected = True
+		self.schedule = schedule
 		self.Name = None    # String
 		self.RoomID = None  # Int
 		self._recv_buffer = b""
@@ -76,9 +78,13 @@ class Message:
 		tmp_list = []
 		map = self.selector.get_map()
 		for i in map:
-			#print("  map["+str(i)+"]: " + repr(map[i]))
 			if map[i].data is not None:
-				tmp_dict = {"Name": map[i].data.Name, "RoomID": map[i].data.RoomID}
+				Name = map[i].data.Name
+				RoomID = map[i].data.RoomID
+				if self.just_connected: # If the User just connected, and has a scheduled room, than he is moved there
+					if self.schedule["Name"]:
+						RoomID = self.schedule["Name"]
+				tmp_dict = {"Name": Name, "RoomID": RoomID}
 				print("  ",tmp_dict) # DEBUG
 				tmp_list.append(tmp_dict)
 		msg = json.dumps(tmp_list, ensure_ascii=False).encode('utf-8')
