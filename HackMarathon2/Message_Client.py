@@ -45,7 +45,7 @@ class Message:
 			self.write()
 
 	def read(self):
-		print('Read') # DEBUG
+		print('Read  '+self.Name) # DEBUG
 		try:
 			data = self.sock.recv(1024)
 		except BlockingIOError:
@@ -72,9 +72,9 @@ class Message:
 			tmp = self._recv_buffer[:self._messagelen].decode('utf-8')
 			self._recv_buffer = self._recv_buffer[self._messagelen:]
 			msg_list = json.loads(tmp)	# received message is a list of dictionaries
-			print("  ", msg_list)
 			self.Users.clear()			# Clearing Users, so we can refresh them
 			for msg_dict in msg_list:
+				print("  ", msg_dict)
 				Name = msg_dict.get("Name")
 				RoomID = msg_dict.get("RoomID")
 				if Name == self.Name:
@@ -85,7 +85,7 @@ class Message:
 	def write(self):
 		global test
 		if test < 5*2:
-			print('Write') # DEBUG
+			print('Write  '+self.Name) # DEBUG
 			self._encode_message()
 			try:
 				sent = self.sock.send(self._send_buffer)

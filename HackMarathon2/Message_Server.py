@@ -78,17 +78,18 @@ class Message:
 		tmp_list = []
 		map = self.selector.get_map()
 		for i in map:
-			if map[i].data is not None:
-				Name = map[i].data.Name
-				RoomID = map[i].data.RoomID
-				if self.just_connected: # If the User just connected, and has a scheduled room, than he is moved there
-					if self.schedule["Name"]:
-						RoomID = self.schedule["Name"]
-				tmp_dict = {"Name": Name, "RoomID": RoomID}
+			User = map[i].data
+			if User is not None:
+				Name = User.Name
+				if Name is not None and User.just_connected: # If the User just connected, and has a scheduled room, than he is moved in there
+					if User.schedule[Name]:
+						User.RoomID = User.schedule[Name]
+				tmp_dict = {"Name": Name, "RoomID": User.RoomID}
 				print("  ",tmp_dict) # DEBUG
 				tmp_list.append(tmp_dict)
 		msg = json.dumps(tmp_list, ensure_ascii=False).encode('utf-8')
 		self._send_buffer += struct.pack(">H",len(msg)) + msg
+		self.just_connected = False
 
 	def close(self):
 		print("Closing connection to ", self.addr)
