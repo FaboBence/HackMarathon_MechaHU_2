@@ -17,15 +17,15 @@ class window(tk.Frame):
         self.h=self.root.winfo_screenheight()
         root.minsize(width=200, height=200)
         self.isMoving = False
-        img = Image.open('OpenOffice.png')
-        [imageSizeWidth, imageSizeHeight] = img.size
+        self.img = Image.open('OpenOffice.png')
+        [imageSizeWidth, imageSizeHeight] = self.img.size
         self.ratio = min(self.w/imageSizeWidth,self.h/imageSizeHeight) 
-        img = img.resize((int(imageSizeWidth*self.ratio), int(imageSizeHeight*self.ratio)), Image.ANTIALIAS)
+        img = self.img.resize((int(imageSizeWidth*self.ratio), int(imageSizeHeight*self.ratio)), Image.ANTIALIAS)
         image = ImageTk.PhotoImage(img)
         #self.canvas = tk.Canvas(width = 1000, height=550, bg='white')
         self.canvas = tk.Canvas(width = self.w, height=self.h, bg='white')
         self.canvas.pack(expand=tk.YES)
-        self.canvas.create_image(0,0,image = image, anchor=tk.NW)
+        self.bg_img = self.canvas.create_image(0,0,image = image, anchor=tk.NW)
         self.circle = self.canvas.create_oval(20,20,60,60,fill="blue")
         #canvas.create_rectangle(0,0,250,170,fill="blue")
         self.my_label = tk.Label(self,text="")#!Test
@@ -35,7 +35,36 @@ class window(tk.Frame):
         self.canvas.bind('<ButtonRelease-1>',self.release) #when you relase the left mose button
         self.create_rooms()
         self.create_users()
+        #self.canvas.bind("<Configure>", self.on_resize)
     
+    def get_user_by_name(self, name):
+        for i in self.users:
+            if i.name == name:
+                return i
+        return None
+
+    def my_position(self):
+        return {"Name": self.name, "RoomID": self.you.room.id}
+    
+    def update_positions(self,positions=None):
+        if len(positions) >0:
+            for i in positions:
+                this_user = self.get_user_by_name(i["Name"])
+                if this_user == None: #The user doesnt exists yet
+                    new_user = User(i["Name"], self.rooms[i["RoomID"]])
+                    tmp_room = self.rooms[i["RoomID"]]
+                    self.canvas.create_oval(tmp_room.center[0]-RADIUS, tmp_room.center[1]-RADIUS,tmp_room.center[0]+RADIUS, tmp_room.center[1]+RADIUS, fill="green")
+                    self.users.append(new_user)
+                elif i["RoomID"] == this_user.room.id:
+                    pass
+                elif len(self.rooms[i["RoomID"]].workers) >1:
+                    #TODO ezt még jobban ki dolgozni...
+                    print("Starting video call with" + self.rooms[i["RoomID"]].workers[0])
+                    this_user.move_to(i["RoomID"])
+                else:
+                    this_user.move_to(i["RoomID"])
+                
+
     def create_rooms(self): #init rooms
         self.rooms = []
         room1 = Room(0,0,250,170,self.ratio)
@@ -47,7 +76,30 @@ class window(tk.Frame):
         self.you = User(self.name, self.rooms[0]) #The actual user
         self.users=[]
         self.users.append(self.you)
+    
+    def on_resize(self, event):
+        global image
+        #img = Image.open('OpenOffice.png')
+        pos = self.canvas.coords(self.circle)
+        [imageSizeWidth, imageSizeHeight] = self.img.size
+        ratio = min(event.width/imageSizeWidth,event.height/imageSizeHeight) 
+        self.img = self.img.resize((int(imageSizeWidth*ratio), int(imageSizeHeight*ratio)), Image.ANTIALIAS)
+        image = ImageTk.PhotoImage(self.img)
+        self.canvas.delete("all")
+        self.bg_img = self.canvas.create_image(0,0,image = image, anchor=tk.NW)
+        
+        #print(ratio)
+        #del self.circle
+        #self.circle = self.canvas.create_oval(int(pos[0]*self.ratio),int(pos[1]*self.ratio),int(pos[2]*self.ratio),int(pos[3]*self.ratio),fill="blue")
+        #self.circle = self.canvas.create_oval(pos[:],fill="blue")
+        for i in self.rooms:
+            i.refresh_size(ratio)
+        center = self.you.room.center
+        #self.circle = self.canvas.create_oval(int(pos[0]*self.ratio),int(pos[1]*self.ratio),int(pos[2]*self.ratio),int(pos[3]*self.ratio),fill="blue")
+        self.circle = self.canvas.create_oval(20,20,60,60,fill="blue")
+        self.canvas.coords(self.circle,center[0]-RADIUS, center[1]-RADIUS,center[0]+RADIUS, center[1]+RADIUS)
 
+        
     def move(self,e):
         pos = self.canvas.coords(self.circle)
         if e.x>=pos[0] and e.x<=pos[2] and e.y>=pos[1] and e.y <=pos[3]:
@@ -62,8 +114,11 @@ class window(tk.Frame):
                     self.canvas.coords(self.circle,i.center[0]-RADIUS, i.center[1]-RADIUS,i.center[0]+RADIUS, i.center[1]+RADIUS)
                     self.you.move_to(i)
                     self.my_label.config(text=f"{self.you.name} is in room: {self.you.room.id}")
+                    print(f"{self.you.name} is in room: {self.you.room.id}")
                     break
             self.isMoving = False
+        print(self.my_position())
+        self.update_positions([self.my_position(), {"Name": "Joe", "RoomID":1}])
 class Room():
     id = 0
     def __init__(self,tlx,tly,brx,bry,ratio=1):
