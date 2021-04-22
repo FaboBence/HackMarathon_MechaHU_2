@@ -18,7 +18,7 @@
 
   On the other hand, it's hard to make work efficient when some colleagues are present in the office, while others are at home. What's more, the main drawback of home offices is that you don't see what others are working on and you can't talk to your colleagues quickly, without having to organize meetings. We solve both of these problems with an innovative augmented reality office, where all workers can log in and show their progress and location. Whether you are at home or in the office, you can place your avatar in a room and update your status. If you want to talk to a colleague, you can check on the GUI where he/she currently is, an if he's/she's at home, you can simply place your avatar next to him to start videochat immediately, without having to schedule meetings.👻🧑‍💼
 
-  These two ideas, office allocation and AR-office are put together, so that companies can schedule their weeks, allocate space, track colleagues locations and current working status and videochat easily with the same programm, featuring machine intelligence and a comfortable GUI. 🏢🏢
+  These two ideas, office allocation and AR-office are put together, so that companies can schedule their weeks, allocate space, track colleagues locations and current working status and videochat easily with the same programm, featuring machine intelligence and a comfortable GUI. 🏢
 
 ## Protoype
 
