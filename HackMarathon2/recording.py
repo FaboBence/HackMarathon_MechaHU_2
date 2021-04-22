@@ -6,29 +6,25 @@ filename = "recordedvideo.avi"
 def record(filename1):#,filename2,filename3):
 	vid = cv2.VideoCapture(0)
 	re,fram = vid.read()
-	videos = list()
-	videos.append(cv2.VideoWriter(filename1, cv2.VideoWriter_fourcc(*'DIVX'), fps, (numpy.shape(fram)[1],numpy.shape(fram)[0])))
-	#videos.append(cv2.VideoWriter(filename2, cv2.VideoWriter_fourcc(*'DIVX'), fps, (numpy.shape(fram)[1],numpy.shape(fram)[0])))
-	#videos.append(cv2.VideoWriter(filename3, cv2.VideoWriter_fourcc(*'DIVX'), fps, (numpy.shape(fram)[1],numpy.shape(fram)[0])))
-	for out in videos:
-		ti = 10 # recording length of packet
-		while(vid.isOpened()):
-			start = time.time()
-			ret,frame = vid.read()
-			if ret == True:
-				out.write(frame)
-				cv2.imshow("RECORDING  Press 'q' to stop",frame)
-				key = cv2.waitKey(1) & 0xFF
-				if key == ord('q'):
-					break
-			else:
+	out = cv2.VideoWriter(filename1, cv2.VideoWriter_fourcc(*'DIVX'), fps, (numpy.shape(fram)[1],numpy.shape(fram)[0]))
+	ti = 10 # recording length of video to be recorded
+	while(vid.isOpened()):
+		start = time.time()
+		ret,frame = vid.read()
+		if ret == True:
+			out.write(frame)
+			cv2.imshow("RECORDING  Press 'q' to stop",frame)
+			key = cv2.waitKey(1) & 0xFF
+			if key == ord('q'):
 				break
-			t = 1/fps-(time.time()-start)
-			if t>0:
-				ti -= 1/fps
-				time.sleep(t)
-			if ti <=0:
-				break
+		else:
+			break
+		t = 1/fps-(time.time()-start)
+		if t>0:
+			ti -= 1/fps
+			time.sleep(t)
+		if ti <=0:
+			break
 		out.release()
 	vid.release()
 	cv2.destroyAllWindows()
@@ -50,6 +46,6 @@ def play(filename1):#,filename2,filename3):
 			if t>0:
 				time.sleep(t)
 
-record("Misi_videoChat.avi")#,"recordedvideo_1.avi","recordedvideo_2.avi")
-play("Misi_videoChat.avi")#,"recordedvideo_1.avi","recordedvideo_2.avi")
+record(filename)
+play(filename)
 
