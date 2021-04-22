@@ -82,8 +82,8 @@ class Message:
 			if User is not None:
 				Name = User.Name
 				if Name is not None and User.just_connected: # If the User just connected, and has a scheduled room, than he is moved in there
-					if User.schedule[Name]:
-						User.RoomID = User.schedule[Name]
+					if User.schedule.get(Name):
+						User.RoomID = User.schedule.get(Name)
 				tmp_dict = {"Name": Name, "RoomID": User.RoomID}
 				print("  ",tmp_dict) # DEBUG
 				tmp_list.append(tmp_dict)
