@@ -9,6 +9,7 @@ class window(tk.Frame):
         super().__init__(root)
         self.root = root
         self.name = name
+        self.unsaved_movement = False
         root.title("Online Office")
         #root.attributes('-fullscreen', True)
         #root.geometry(f"{w}x{h}")
@@ -52,6 +53,7 @@ class window(tk.Frame):
             print("Cant delete")
 
     def my_position(self):
+        self.unsaved_movement = False
         return {"Name": self.name, "RoomID": self.you.room.id}
     
     def update_positions(self,positions=None):
@@ -76,11 +78,14 @@ class window(tk.Frame):
                         self.other_users.append(user_symbol)
                 else:
                     if i["Name"] == self.name:
-                        tmp_room = self.rooms[i["RoomID"]]
-                        print(len(tmp_room.workers))
-                        cntr = tmp_room.center
-                        self.canvas.coords(self.circle,cntr[0]-RADIUS,cntr[1]-RADIUS,cntr[0]+RADIUS,cntr[1]+RADIUS)
-                        this_user.move_to(tmp_room)
+                        if self.unsaved_movement:
+                            continue
+                        else:
+                            tmp_room = self.rooms[i["RoomID"]]
+                            print(len(tmp_room.workers))
+                            cntr = tmp_room.center
+                            self.canvas.coords(self.circle,cntr[0]-RADIUS,cntr[1]-RADIUS,cntr[0]+RADIUS,cntr[1]+RADIUS)
+                            this_user.move_to(tmp_room)
                     else:
                         tmp_room = self.rooms[i["RoomID"]]
                         print(len(tmp_room.workers))
@@ -151,6 +156,7 @@ class window(tk.Frame):
                     print(f"{self.you.name} is in room: {self.you.room.id}")
                     break
             self.isMoving = False
+            self.unsaved_movement = True
         #!print(self.my_position())
         #!self.update_positions([self.my_position(), {"Name": "Joe", "RoomID":1}])
 class Room():
