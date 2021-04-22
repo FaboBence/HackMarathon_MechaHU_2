@@ -45,8 +45,11 @@ class window(tk.Frame):
         return None
 
     def delete_other_users(self):
-        for i in self.other_users:
-            self.canvas.delete(i)
+        try:
+            for i in self.other_users:
+                self.canvas.delete(i)
+        except:
+            print("Cant delete")
 
     def my_position(self):
         return {"Name": self.name, "RoomID": self.you.room.id}
@@ -71,16 +74,23 @@ class window(tk.Frame):
                         tmp_room = self.rooms[i["RoomID"]]
                         user_symbol = self.canvas.create_oval(tmp_room.center[0]-RADIUS, tmp_room.center[1]-RADIUS,tmp_room.center[0]+RADIUS, tmp_room.center[1]+RADIUS, fill="green")
                         self.other_users.append(user_symbol)
-                elif len(self.rooms[i["RoomID"]].workers) >1:
+                else:
+                    if i["Name"] == self.name:
+                        tmp_room = self.rooms[i["RoomID"]]
+                        print(len(tmp_room.workers))
+                        cntr = tmp_room.center
+                        self.canvas.coords(self.circle,cntr[0]-RADIUS,cntr[1]-RADIUS,cntr[0]+RADIUS,cntr[1]+RADIUS)
+                        this_user.move_to(tmp_room)
+                    else:
+                        tmp_room = self.rooms[i["RoomID"]]
+                        print(len(tmp_room.workers))
+                        user_symbol = self.canvas.create_oval(tmp_room.center[0]-RADIUS, tmp_room.center[1]-RADIUS,tmp_room.center[0]+RADIUS, tmp_room.center[1]+RADIUS, fill="green")
+                        self.other_users.append(user_symbol)
+                        this_user.move_to(tmp_room)
+                """elif len(self.rooms[i["RoomID"]].workers) >1:
                     #TODO ezt még jobban ki dolgozni...
                     print("Starting video call with" + self.rooms[i["RoomID"]].workers[0])
-                    this_user.move_to(i["RoomID"])
-                else:
-                    tmp_room = self.rooms[i["RoomID"]]
-                    user_symbol = self.canvas.create_oval(tmp_room.center[0]-RADIUS, tmp_room.center[1]-RADIUS,tmp_room.center[0]+RADIUS, tmp_room.center[1]+RADIUS, fill="green")
-                    self.other_users.append(user_symbol)
-                    this_user.move_to(i["RoomID"])
-                
+                    this_user.move_to(i["RoomID"])"""
 
     def create_rooms(self): #init rooms
         self.rooms = []
@@ -142,7 +152,7 @@ class window(tk.Frame):
                     break
             self.isMoving = False
         #!print(self.my_position())
-        self.update_positions([self.my_position(), {"Name": "Joe", "RoomID":1}])
+        #!self.update_positions([self.my_position(), {"Name": "Joe", "RoomID":1}])
 class Room():
     id = 0
     def __init__(self,tlx,tly,brx,bry,ratio=1):
