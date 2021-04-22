@@ -32,10 +32,14 @@ The program is a server-client communication based graphical user interface, whi
 
 ## Challenges and accomplishments
 
-*Is there anything unexpected that you learned over the course of this project?*
-
-*Is there something your team is particularly proud of, related to this project?*
+During both parts of our project we learned a lot new things and gained further experiment in programming:
+- While creating the office allocation algortihm, we got to know many interesting algortihm-possibilities and modern methods to implement machine intelligence to a certain problem.
+- The creation of the server-client communication was a real challenge, now we understand the way of working of such systems much better. Creating the GUI was also a brand new experience to the group, this was the first time we created a graphical user interface to our program.
 
 ## Next steps
-
-*What do you need to do next to turn this prototype into a working solution?*
+Our idea is quite complex, hence there are lot's of further features which are waiting to be implemented:
+- We would like to make space registraion easier via an online questionaire  (in the current status of the program, you have to type in your space request into a .csv file)
+- We would like to further develop the office space allocation algorithm to make it find the optimal schedule quickly, even for bigger, more comlicated office systems. 
+- The augmented reality office has many more development-possibilities: working status, file sharing, advanced avatars holding more information, rooms with different roles, etc.
+- We would like to make server communication faster and more stable with advanced programs
+- The GUI could be developed by creating interactive items in it, and the graphics can be developed, too.
