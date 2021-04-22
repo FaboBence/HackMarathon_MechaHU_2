@@ -1,4 +1,4 @@
-import socket, selectors
+import socket, selectors, threading
 import tkinter as tk
 import Message_Client, gui
 from Custom_Errors import *
@@ -14,23 +14,24 @@ def start_connection(host,port,name):
     sel.register(sock, events, data=message)
 
 def Client_loop():
-    print("Waiting for events = sel.select()")
-    events = sel.select(timeout=1)
-    for key, mask in events:
-        message = key.data
-        try:
-            message.process(mask)
-        except ServerDisconnectError:
-            print("Server closed connection.")
-            message.close()
-        except Exception:
-            print("Something went wrong with 'message.process(mask)'")
-            message.close()
-    # Check for a socket being monitored to continue.
-    if not sel.get_map():
-        sel.close()
-        return
-    root.after(500,Client_loop)
+    while True:
+        print("Waiting for events = sel.select()")
+        events = sel.select(timeout=1)
+        for key, mask in events:
+            message = key.data
+            try:
+                message.process(mask)
+            except ServerDisconnectError:
+                print("Server closed connection.")
+                message.close()
+            except Exception:
+                print("Something went wrong with 'message.process(mask)'")
+                message.close()
+        # Check for a socket being monitored to continue.
+        if not sel.get_map():
+            sel.close()
+            break
+    #root.after(500,Client_loop)
 
 
 
@@ -50,5 +51,6 @@ if __name__ == '__main__':
         root = tk.Tk() #Starting the main application
         mainWindow = gui.window(root, name)
         mainWindow.pack()
-        root.after(1,Client_loop)
+        #root.after(1,Client_loop)
+        Client_thread = threading.Thread(target = Client_loop).start()
         root.mainloop()
