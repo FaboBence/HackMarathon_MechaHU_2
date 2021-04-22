@@ -186,17 +186,28 @@ class User():
 class name_input_window(tk.Frame):
     def __init__(self, root, *args, **kwargs):
         super().__init__(root, *args, **kwargs)
+        global image
         self.root = root
-        root.title("Login")
-        root.geometry("600x400")
-        root.minsize(width=200, height=200)
         self.name=None
-        self.label = tk.Label(root, text="Enter your name: ")
-        self.label.pack()
-        self.entry = tk.Entry(root)
-        self.entry.pack()
-        self.button = tk.Button(root, text="OK", command=self.ok)
-        self.button.pack()
+        root.minsize(width=200, height=200)
+        img = Image.open('Log_in.png')
+        w=int(img.size[0]/2)
+        h=int(img.size[1]/2)
+        img = img.resize((w, h), Image.ANTIALIAS)
+        image = ImageTk.PhotoImage(img)
+        root.geometry(f"{w}x{h}")
+        root.title("Login")
+        
+        self.canvas = tk.Canvas(width = w, height=h, bg='white')
+        self.canvas.pack(expand=tk.YES)
+        self.bg_img = self.canvas.create_image(0,0,image = image, anchor=tk.NW)
+        #self.label = tk.Label(root, text="Enter your name: ")
+        #self.label.pack()
+        self.entry = tk.Entry(self.canvas)
+        self.canvas.create_window(400,220,window=self.entry)
+        #self.entry.pack()
+        #self.button = tk.Button(root, text="OK", command=self.ok)
+        #self.button.pack()
         self.root.bind('<Return>', self.ok)
 
     def ok(self,event=None):
