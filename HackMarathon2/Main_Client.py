@@ -9,7 +9,7 @@ def start_connection(host,port,name):
     sock.setblocking(False)
     sock.connect_ex(addr)  # Connecting to server
     print("Connecting to: " + repr(addr))
-    events = selectors.EVENT_WRITE #| selectors.EVENT_READ
+    events = selectors.EVENT_WRITE
     message = Message_Client.Message(sel, sock, addr, Name=name,RoomID=0)
     sel.register(sock, events, data=message)
 
