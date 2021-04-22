@@ -28,6 +28,7 @@ class Message:
 		self._send_buffer = b""
 		self._headerlen = 2 # Bytes
 		self._messagelen = None
+		self.message = list()
 
 	def _set_selector_events_mask(self, mode):
 		if mode == "r":
@@ -73,6 +74,7 @@ class Message:
 			tmp = self._recv_buffer[:self._messagelen].decode('utf-8')
 			self._recv_buffer = self._recv_buffer[self._messagelen:]
 			msg_list = json.loads(tmp)	# received message is a list of dictionaries
+			self.message = msg_list
 			self.Users.clear()			# Clearing Users, so we can refresh them
 			for msg_dict in msg_list:
 				print("  ", msg_dict)
