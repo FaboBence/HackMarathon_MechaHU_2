@@ -13,9 +13,10 @@ def start_connection(host,port,name):
     message = Message_Client.Message(sel, sock, addr, Name=name,RoomID=0)
     sel.register(sock, events, data=message)
 
-def Client_loop():
+def Client_loop(main_window):
     while True:
-        print("Waiting for events = sel.select()")
+        #print("Waiting for events = sel.select()")
+        print(main_window.my_position())
         events = sel.select(timeout=1)
         for key, mask in events:
             message = key.data
@@ -52,5 +53,5 @@ if __name__ == '__main__':
         mainWindow = gui.window(root, name)
         mainWindow.pack()
         #root.after(1,Client_loop)
-        Client_thread = threading.Thread(target = Client_loop).start()
+        Client_thread = threading.Thread(target = Client_loop, args=(mainWindow,)).start()
         root.mainloop()
