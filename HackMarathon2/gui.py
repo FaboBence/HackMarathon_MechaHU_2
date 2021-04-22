@@ -159,6 +159,7 @@ class window(tk.Frame):
             self.unsaved_movement = True
         #!print(self.my_position())
         #!self.update_positions([self.my_position(), {"Name": "Joe", "RoomID":1}])
+        #!start_video()
 class Room():
     id = 0
     def __init__(self,tlx,tly,brx,bry,ratio=1):
@@ -237,7 +238,8 @@ class video_call(tk.Frame):
             print("An error occured...")
         self.l2=tk.Label(root, image=img)
         self.l2.pack()
-        
+        self.button = tk.Button(self, text="Finish call", command= lambda: finish_call(self))
+        self.button.pack()
         self.root.after(1000,self.refresh)
 
     def refresh(self):
@@ -253,12 +255,32 @@ class video_call(tk.Frame):
             print("An error occured...")
         self.root.after(20,self.refresh)
 
+def start_video():
+    global mainWindow, root, video_frame
+    frame = mainWindow
+    frame.canvas.pack_forget()
+    frame.pack_forget()
+    video_frame = video_call(root)
+    video_frame.pack()
+
+def finish_call(v_frame):
+    global mainWindow, root
+    frame = v_frame
+    frame.cap.release()
+    frame.l2.pack_forget()
+    frame.pack_forget()
+    #frame.pack_forget()
+    #video_frame = video_call(root)
+    mainWindow.pack()
+    mainWindow.canvas.pack()
+
 if __name__ == '__main__':
     input_form = tk.Tk() #Starting a form where we ask for the name of the user
     input_window = name_input_window(input_form)
     input_window.pack()
     input_form.mainloop()
     name = input_window.name
+    #video_frame = None
     del input_form #We dont need it anymore
     if name is not None:
         root = tk.Tk() #Starting the main application
