@@ -15,13 +15,13 @@ def start_connection(host,port,name):
 
 def Client_loop(main_window):
     while True:
-        #print("Waiting for events = sel.select()")
         print(main_window.my_position())
         events = sel.select(timeout=1)
         for key, mask in events:
             message = key.data
             try:
                 message.process(mask)
+                main_window.update_positions(message.message) # Updating positions in the GUI
             except ServerDisconnectError:
                 print("Server closed connection.")
                 message.close()
