@@ -29,6 +29,7 @@ class Message:
 		self._headerlen = 2 # Bytes
 		self._messagelen = None
 		self.message = list()
+		self.position = dict()
 
 	def _set_selector_events_mask(self, mode):
 		if mode == "r":
@@ -39,10 +40,21 @@ class Message:
 			events = selectors.EVENT_READ | selectors.EVENT_WRITE
 		self.selector.modify(self.sock, events, data = self)
 
-	def process(self,mask):
+	def process(self,mask,main_window):
 		if mask & selectors.EVENT_READ:
 			self.read()
+			try:
+				main_window.update_positions(message.message) # Updating positions in the GUI
+			except:
+				print("  Excepted in read")
+				pass
 		if mask & selectors.EVENT_WRITE:
+			try:
+				message.position = main_window.my_position()
+				print("message.position:",message.position)
+			except:
+				print("  Excepted in write")
+				pass
 			self.write()
 
 	def read(self):
@@ -61,7 +73,6 @@ class Message:
 			self._decode_messagelen()
 			if self._messagelen is not None:
 				self._decode_message()
-			print(str())
 			self._set_selector_events_mask("w")
 
 	def _decode_messagelen(self):
@@ -102,7 +113,11 @@ class Message:
 		#test += 1
 
 	def _encode_message(self):
-		tmp_dict = {"Name": self.Name, "RoomID": self.RoomID}
+		if self.position:
+			tmp_dict = self.position
+		else:
+			tmp_dict = {"Name": self.Name, "RoomID": self.RoomID}
+		
 		print("  ",tmp_dict)
 		msg = json.dumps(tmp_dict, ensure_ascii=False).encode('utf-8')
 		self._send_buffer += struct.pack(">H",len(msg)) + msg
