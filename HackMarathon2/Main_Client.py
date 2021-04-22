@@ -1,4 +1,4 @@
-import socket, selectors, threading
+import socket, selectors, threading, sys
 import tkinter as tk
 import Message_Client, gui
 from Custom_Errors import *
@@ -33,26 +33,26 @@ def Client_loop(main_window):
         if not sel.get_map():
             sel.close()
             break
-    #root.after(500,Client_loop)
 
 
 
         ######## PROGRAM STARTS HERE #########
 if __name__ == '__main__':
-    input_form = tk.Tk() #Starting a form where we ask for the name of the user
+    input_form = tk.Tk() # Starting a form where we ask for the name of the user
     input_window = gui.name_input_window(input_form)
     input_window.pack()
     input_form.mainloop()
     name = input_window.name
-    del input_form #We dont need it anymore
+    del input_form # We dont need it anymore
     if name is not None:
 # Connecting to server
         sel = selectors.DefaultSelector()
         host, port = ['127.0.0.1', 65432]
         start_connection(host, port, name)
-        root = tk.Tk() #Starting the main application
+        # Starting the main application
+        root = tk.Tk()
         mainWindow = gui.window(root, name)
         mainWindow.pack()
-        #root.after(1,Client_loop)
-        Client_thread = threading.Thread(target = Client_loop, args=(mainWindow,)).start()
+        Client_thread = threading.Thread(target = Client_loop, args=(mainWindow,),daemon=True).start()
         root.mainloop()
+        sys.exit()

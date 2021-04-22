@@ -1,4 +1,4 @@
-import selectors, struct, json
+import selectors, struct, json, traceback
 from Custom_Errors import *
 
 #test = 0
@@ -44,17 +44,17 @@ class Message:
 		if mask & selectors.EVENT_READ:
 			self.read()
 			try:
-				main_window.update_positions(message.message) # Updating positions in the GUI
-			except:
+				main_window.update_positions(self.message) # Updating positions in the GUI
+			except Exception:
 				print("  Excepted in read")
-				pass
+				print("main: error: exception for", f"{traceback.format_exc()}",)
 		if mask & selectors.EVENT_WRITE:
 			try:
-				message.position = main_window.my_position()
-				print("message.position:",message.position)
-			except:
+				self.position = main_window.my_position()
+				print("message.position:",self.position)
+			except Exception:
 				print("  Excepted in write")
-				pass
+				print("main: error: exception for", f"{traceback.format_exc()}",)
 			self.write()
 
 	def read(self):

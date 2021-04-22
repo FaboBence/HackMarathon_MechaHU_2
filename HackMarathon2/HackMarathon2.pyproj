@@ -21,9 +21,6 @@
     <EnableUnmanagedDebugging>false</EnableUnmanagedDebugging>
   </PropertyGroup>
   <ItemGroup>
-    <Compile Include="ClientComm.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="Custom_Errors.py">
       <SubType>Code</SubType>
     </Compile>
@@ -41,16 +38,9 @@
       <SubType>Code</SubType>
     </Compile>
     <Compile Include="Office_allocation.py" />
-    <Compile Include="Receiver.py">
-      <SubType>Code</SubType>
-    </Compile>
     <Compile Include="recording.py">
       <SubType>Code</SubType>
     </Compile>
-    <Compile Include="Streamer.py">
-      <SubType>Code</SubType>
-    </Compile>
-    <Compile Include="ServerComm.py" />
   </ItemGroup>
   <Import Project="$(MSBuildExtensionsPath32)\Microsoft\VisualStudio\v$(VisualStudioVersion)\Python Tools\Microsoft.PythonTools.targets" />
   <!-- Uncomment the CoreCompile target to enable the Build command in

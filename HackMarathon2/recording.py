@@ -1,4 +1,4 @@
-import cv2, time, numpy, pickle
+import cv2, time, numpy
 
 fps = 25
 filename = "recordedvideo.avi"
