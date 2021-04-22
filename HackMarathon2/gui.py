@@ -176,7 +176,7 @@ class name_input_window(tk.Frame):
             self.name=self.entry.get()
             self.root.destroy()
         else:
-            print("You must write a name in!")
+            print("You MUST enter a name!")
 
 class video_call(tk.Frame):
     def __init__(self, root):
@@ -189,7 +189,7 @@ class video_call(tk.Frame):
             img = Image.fromarray(img)
             img = ImageTk.PhotoImage(img)
         else:
-            print("Some error occured...")
+            print("An error occured...")
         self.l2=tk.Label(root, image=img)
         self.l2.pack()
         
@@ -205,7 +205,7 @@ class video_call(tk.Frame):
             self.l2.configure(image=img)
             self.l2.image = img
         else:
-            print("Some error occured...")
+            print("An error occured...")
         self.root.after(20,self.refresh)
 
 if __name__ == '__main__':

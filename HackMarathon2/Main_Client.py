@@ -9,7 +9,7 @@ def start_connection(host,port,name):
     sock.setblocking(False)
     sock.connect_ex(addr)  # Connecting to server
     print("Connecting to: " + repr(addr))
-    events = selectors.EVENT_WRITE #| selectors.EVENT_READ
+    events = selectors.EVENT_WRITE
     message = Message_Client.Message(sel, sock, addr, Name=name,RoomID=0)
     sel.register(sock, events, data=message)
 
@@ -52,5 +52,5 @@ if __name__ == '__main__':
         mainWindow = gui.window(root, name)
         mainWindow.pack()
         #root.after(1,Client_loop)
-        Client_thread = threading.Thread(target = Client_loop).start()
+        Client_thread = threading.Thread(target = Client_loop).start()  # Threading, so we can update the window and communicate with server simultaniously
         root.mainloop()
