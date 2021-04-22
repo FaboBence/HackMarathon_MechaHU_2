@@ -35,6 +35,7 @@ class window(tk.Frame):
         self.canvas.bind('<ButtonRelease-1>',self.release) #when you relase the left mose button
         self.create_rooms()
         self.create_users()
+        self.other_users = []
         #self.canvas.bind("<Configure>", self.on_resize)
     
     def get_user_by_name(self, name):
@@ -43,25 +44,41 @@ class window(tk.Frame):
                 return i
         return None
 
+    def delete_other_users(self):
+        for i in self.other_users:
+            self.canvas.delete(i)
+
     def my_position(self):
         return {"Name": self.name, "RoomID": self.you.room.id}
     
     def update_positions(self,positions=None):
         if len(positions) >0:
+            self.delete_other_users()
             for i in positions:
+                if i["Name"] == None:
+                    continue
                 this_user = self.get_user_by_name(i["Name"])
                 if this_user == None: #The user doesnt exists yet
                     new_user = User(i["Name"], self.rooms[i["RoomID"]])
                     tmp_room = self.rooms[i["RoomID"]]
-                    self.canvas.create_oval(tmp_room.center[0]-RADIUS, tmp_room.center[1]-RADIUS,tmp_room.center[0]+RADIUS, tmp_room.center[1]+RADIUS, fill="green")
+                    user_symbol = self.canvas.create_oval(tmp_room.center[0]-RADIUS, tmp_room.center[1]-RADIUS,tmp_room.center[0]+RADIUS, tmp_room.center[1]+RADIUS, fill="green")
+                    self.other_users.append(user_symbol)
                     self.users.append(new_user)
                 elif i["RoomID"] == this_user.room.id:
-                    pass
+                    if i["Name"] == self.name:
+                        pass
+                    else:
+                        tmp_room = self.rooms[i["RoomID"]]
+                        user_symbol = self.canvas.create_oval(tmp_room.center[0]-RADIUS, tmp_room.center[1]-RADIUS,tmp_room.center[0]+RADIUS, tmp_room.center[1]+RADIUS, fill="green")
+                        self.other_users.append(user_symbol)
                 elif len(self.rooms[i["RoomID"]].workers) >1:
                     #TODO ezt még jobban ki dolgozni...
                     print("Starting video call with" + self.rooms[i["RoomID"]].workers[0])
                     this_user.move_to(i["RoomID"])
                 else:
+                    tmp_room = self.rooms[i["RoomID"]]
+                    user_symbol = self.canvas.create_oval(tmp_room.center[0]-RADIUS, tmp_room.center[1]-RADIUS,tmp_room.center[0]+RADIUS, tmp_room.center[1]+RADIUS, fill="green")
+                    self.other_users.append(user_symbol)
                     this_user.move_to(i["RoomID"])
                 
 
@@ -112,6 +129,7 @@ class window(tk.Frame):
             self.my_label.config(text=f"Coordinates: x: {e.x} y: {e.y}")
             self.canvas.coords(self.circle,e.x-RADIUS,e.y-RADIUS,e.x+RADIUS,e.y+RADIUS)
             self.isMoving = True
+        #!self.update_positions([self.my_position(), {"Name": "Jim", "RoomID":2},{"Name": "Joe", "RoomID":1}])
     def release(self,e):
         if self.isMoving:
             #print(e)
@@ -124,7 +142,7 @@ class window(tk.Frame):
                     break
             self.isMoving = False
         #!print(self.my_position())
-        #!self.update_positions([self.my_position(), {"Name": "Joe", "RoomID":1}])
+        self.update_positions([self.my_position(), {"Name": "Joe", "RoomID":1}])
 class Room():
     id = 0
     def __init__(self,tlx,tly,brx,bry,ratio=1):
