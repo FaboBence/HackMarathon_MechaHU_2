@@ -1,9 +1,9 @@
 import tkinter as tk
 from PIL import Image, ImageTk
 import cv2
-RADIUS = 20
+RADIUS = 20 #radius of the circles, which represents the users
 
-class window(tk.Frame):
+class window(tk.Frame): #This is the main application
     def __init__(self,root,name):
         global image # we need it because tkinters image handler has some bug in it...
         super().__init__(root)
@@ -11,8 +11,6 @@ class window(tk.Frame):
         self.name = name
         self.unsaved_movement = False
         root.title("Augmented Reality Office")
-        #root.attributes('-fullscreen', True)
-        #root.geometry(f"{w}x{h}")
         root.state('zoomed')
         self.w=self.root.winfo_screenwidth()
         self.h=self.root.winfo_screenheight()
@@ -23,14 +21,11 @@ class window(tk.Frame):
         self.ratio = min(self.w/imageSizeWidth,self.h/imageSizeHeight) 
         img = self.img.resize((int(imageSizeWidth*self.ratio), int(imageSizeHeight*self.ratio)), Image.ANTIALIAS)
         image = ImageTk.PhotoImage(img)
-        #self.canvas = tk.Canvas(width = 1000, height=550, bg='white')
         self.canvas = tk.Canvas(width = self.w, height=self.h, bg='white')
         self.canvas.pack(expand=tk.YES)
         self.bg_img = self.canvas.create_image(0,0,image = image, anchor=tk.NW)
         self.circle = self.canvas.create_oval(20,20,60,60,fill="blue")
-        #canvas.create_rectangle(0,0,250,170,fill="blue")
-        self.my_label = tk.Label(self,text="")#!Test
-        #self.my_label.pack()#!Test
+
         
         self.canvas.bind('<B1-Motion>',self.move) #"drag-and-drop" action
         self.canvas.bind('<ButtonRelease-1>',self.release) #when you relase the left mose button
@@ -45,7 +40,7 @@ class window(tk.Frame):
                 return i
         return None
 
-    def delete_other_users(self):
+    def delete_other_users(self):#Removing previous state befor refreshing
         try:
             for i in self.other_users:
                 self.canvas.delete(i)
@@ -53,15 +48,13 @@ class window(tk.Frame):
         except:
             print("Cant delete")
 
-    def my_position(self):
+    def my_position(self): #asking for the position of the current user, and sendig it to the server
         self.unsaved_movement = False
         return {"Name": self.name, "RoomID": self.you.room.id}
     
-    def fix_positions(self):
+    def fix_positions(self): #When two people are in the same room, they're circle shouldn't be on the top of eachother
         tmp_list = [self.canvas.coords(self.circle)[0]]
         for i in self.other_users:
-            print(i)
-            print(self.canvas.coords(i))
             current_coord = self.canvas.coords(i)[0]
             if current_coord not in tmp_list and current_coord-RADIUS not in tmp_list and current_coord+RADIUS not in tmp_list:
                 tmp_list.append(i)
@@ -85,7 +78,7 @@ class window(tk.Frame):
                     oc = self.canvas.coords(i)
                     self.canvas.coords(i,oc[0]+RADIUS,oc[1],oc[2]+RADIUS, oc[3])
 
-    def update_positions(self,positions=None):
+    def update_positions(self,positions=None): #updating positinos based on the data we get from the server.
         if len(positions) >0:
             self.delete_other_users()
             for i in positions:
@@ -111,20 +104,14 @@ class window(tk.Frame):
                             continue
                         else:
                             tmp_room = self.rooms[i["RoomID"]]
-                            #print(len(tmp_room.workers))
                             cntr = tmp_room.center
                             self.canvas.coords(self.circle,cntr[0]-RADIUS,cntr[1]-RADIUS,cntr[0]+RADIUS,cntr[1]+RADIUS)
                             this_user.move_to(tmp_room)
                     else:
                         tmp_room = self.rooms[i["RoomID"]]
-                        #print(len(tmp_room.workers))
                         user_symbol = self.canvas.create_oval(tmp_room.center[0]-RADIUS, tmp_room.center[1]-RADIUS,tmp_room.center[0]+RADIUS, tmp_room.center[1]+RADIUS, fill="green")
                         self.other_users.append(user_symbol)
                         this_user.move_to(tmp_room)
-                """elif len(self.rooms[i["RoomID"]].workers) >1:
-                    #TODO ezt még jobban ki dolgozni...
-                    print("Starting video call with" + self.rooms[i["RoomID"]].workers[0])
-                    this_user.move_to(i["RoomID"])"""
             self.fix_positions()
     def create_rooms(self): #init rooms
         self.rooms = []
@@ -144,7 +131,7 @@ class window(tk.Frame):
         self.users=[]
         self.users.append(self.you)
     
-    def on_resize(self, event):
+    def on_resize(self, event):#This function currently out of use, because of the later implemented modifications
         global image
         #img = Image.open('OpenOffice.png')
         pos = self.canvas.coords(self.circle)
@@ -170,19 +157,15 @@ class window(tk.Frame):
     def move(self,e):
         pos = self.canvas.coords(self.circle)
         if e.x>=pos[0] and e.x<=pos[2] and e.y>=pos[1] and e.y <=pos[3]:
-            self.my_label.config(text=f"Coordinates: x: {e.x} y: {e.y}")
             self.canvas.coords(self.circle,e.x-RADIUS,e.y-RADIUS,e.x+RADIUS,e.y+RADIUS)
             self.isMoving = True
-        #!self.update_positions([self.my_position(), {"Name": "Jim", "RoomID":2},{"Name": "Joe", "RoomID":1}])
     def release(self,e):
         start_call = None
         if self.isMoving:
-            #print(e)
             for i in self.rooms:
                 if e.x>=i.tlx and e.x<=i.brx and e.y>=i.tly and e.y <=i.bry:
                     self.canvas.coords(self.circle,i.center[0]-RADIUS, i.center[1]-RADIUS,i.center[0]+RADIUS, i.center[1]+RADIUS)
                     self.you.move_to(i)
-                    self.my_label.config(text=f"{self.you.name} is in room: {self.you.room.id}")
                     print(f"{self.you.name} is in room: {self.you.room.id}")
                     if len(self.you.room.workers) >1:
                         if self.you.room.workers[0].id == self.you.id:
@@ -196,9 +179,8 @@ class window(tk.Frame):
             if start_call is not None:
                 start_video(self.root,self,start_call.name)
         #!print(self.my_position())
-        #!self.update_positions([self.my_position(), {"Name": "Joe", "RoomID":1}])
         #!start_video(self.root,self,"start_call.name")
-class Room():
+class Room(): #Class for the rooms
     id = 0
     def __init__(self,tlx,tly,brx,bry,ratio=1):
         self.tlx=tlx*ratio #top left corner
@@ -215,7 +197,7 @@ class Room():
     def remove_worker(self,worker):
         self.workers.remove(worker)
 
-class User():
+class User(): #Class of the users
     id = 0
     def __init__(self,name,where):
         self.name = name
@@ -223,12 +205,12 @@ class User():
         self.id = User.id
         User.id += 1
         where.add_worker(self)
-    def move_to(self,where):
+    def move_to(self,where): #moving the user to the given room 
         self.room.remove_worker(self)
         self.room = where
         where.add_worker(self)
 
-class name_input_window(tk.Frame):
+class name_input_window(tk.Frame):#We ask for the name of the user
     def __init__(self, root, *args, **kwargs):
         super().__init__(root, *args, **kwargs)
         global image
@@ -246,30 +228,26 @@ class name_input_window(tk.Frame):
         self.canvas = tk.Canvas(width = w, height=h, bg='white')
         self.canvas.pack(expand=tk.YES)
         self.bg_img = self.canvas.create_image(0,0,image = image, anchor=tk.NW)
-        #self.label = tk.Label(root, text="Enter your name: ")
-        #self.label.pack()
         self.entry = tk.Entry(self.canvas,font = "Helvetica 26",justify="center")
         self.canvas.create_window(364,228, width=320, height=45,window=self.entry)
-        #self.entry.pack()
-        #self.button = tk.Button(root, text="OK", command=self.ok)
-        #self.button.pack()
+        self.button = tk.Button(root, text="Enter", command=self.ok)
+        self.canvas.create_window(364,280, width=160, height=45,window=self.button)
         self.root.bind('<Return>', self.ok)
 
-    def ok(self,event=None):
+    def ok(self,event=None): #Cheking the name, and closing the name input window
         if len(self.entry.get())>0:
             self.name=self.entry.get()
             self.root.destroy()
         else:
             print("You MUST enter a name!")
 
-class video_call(tk.Frame):
+class video_call(tk.Frame):#The frame for the video call (currently it only reads in two pre-recorded video)
     def __init__(self, root,mainWindow, target):
-        bg_col = '#E1C699'
-        super().__init__(root, bg=bg_col)
+        super().__init__(root)
         self.target = target
         self.root = root
         self.mainWindow = mainWindow
-        self.cap1 = cv2.VideoCapture("Bence_videoChat.avi")
+        self.cap1 = cv2.VideoCapture("Bence_videoChat.avi") #Currently it only reads the given video
         self.cap2 = cv2.VideoCapture("Misi_videoChat.avi")
         ret1, frame1 = self.cap1.read()
         ret2, frame2 = self.cap2.read()
@@ -285,17 +263,15 @@ class video_call(tk.Frame):
             img2 = ImageTk.PhotoImage(img2)
         else:
             print("An error occured...")
-        self.l1=tk.Label(root,bg=bg_col, image=img1)
+        self.l1=tk.Label(root, image=img1)
         self.l1.pack(side = tk.LEFT, padx=(75,0))
         self.l2=tk.Label(root, image=img2)
         self.l2.pack(side=tk.RIGHT, padx=(0,75))
         self.button = tk.Button(self, text="Finish call",width=10, bg='red', fg='white', command= lambda: finish_call(self,mainWindow))
-        #self.button.place(anchor=tk.N,relx=0.5, rely=0.95, width=200,height=50)
         self.button.pack(pady=(700,0))
         self.root.after(1000,self.refresh)
 
-    def refresh(self):
-        #print("ping")
+    def refresh(self): #The frames are displayed continously
         ret1, frame1 = self.cap1.read()
         img1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2RGB)
         ret2, frame2 = self.cap2.read()
@@ -316,22 +292,20 @@ class video_call(tk.Frame):
             print("An error occured...")
         self.root.after(20,self.refresh)
 
-def start_video(root, mainWindow, target):
+def start_video(root, mainWindow, target): #starting video call
     frame = mainWindow
     frame.canvas.pack_forget()
     frame.pack_forget()
     video_frame = video_call(root,mainWindow, target)
     video_frame.pack()
 
-def finish_call( v_frame,mainWindow):
+def finish_call( v_frame,mainWindow): # for closing video call
     frame = v_frame
     frame.cap1.release()
     frame.cap2.release()
     frame.l1.pack_forget()
     frame.l2.pack_forget()
     frame.pack_forget()
-    #frame.pack_forget()
-    #video_frame = video_call(root)
     mainWindow.pack()
     mainWindow.canvas.pack()
 
@@ -341,14 +315,9 @@ if __name__ == '__main__':
     input_window.pack()
     input_form.mainloop()
     name = input_window.name
-    #video_frame = None
     del input_form #We dont need it anymore
     if name is not None:
         root = tk.Tk() #Starting the main application
         mainWindow = window(root, name)
         mainWindow.pack()
         root.mainloop()
-    #new_window = tk.Tk()
-    #v_call = video_call(new_window)
-    #v_call.pack()
-    #new_window.mainloop()
