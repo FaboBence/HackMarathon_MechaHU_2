@@ -30,7 +30,7 @@ class window(tk.Frame):
         self.circle = self.canvas.create_oval(20,20,60,60,fill="blue")
         #canvas.create_rectangle(0,0,250,170,fill="blue")
         self.my_label = tk.Label(self,text="")#!Test
-        self.my_label.pack()#!Test
+        #self.my_label.pack()#!Test
         
         self.canvas.bind('<B1-Motion>',self.move) #"drag-and-drop" action
         self.canvas.bind('<ButtonRelease-1>',self.release) #when you relase the left mose button
@@ -49,6 +49,7 @@ class window(tk.Frame):
         try:
             for i in self.other_users:
                 self.canvas.delete(i)
+            self.other_users = []
         except:
             print("Cant delete")
 
@@ -56,6 +57,34 @@ class window(tk.Frame):
         self.unsaved_movement = False
         return {"Name": self.name, "RoomID": self.you.room.id}
     
+    def fix_positions(self):
+        tmp_list = [self.canvas.coords(self.circle)[0]]
+        for i in self.other_users:
+            print(i)
+            print(self.canvas.coords(i))
+            current_coord = self.canvas.coords(i)[0]
+            if current_coord not in tmp_list and current_coord-RADIUS not in tmp_list and current_coord+RADIUS not in tmp_list:
+                tmp_list.append(i)
+            else:
+                try:
+                    idx = tmp_list.index(current_coord)
+                except:
+                    try:
+                        idx = tmp_list.index(current_coord-RADIUS)
+                    except:
+                        idx = tmp_list.index(current_coord+RADIUS)
+                
+                if idx == 0:
+                    oc = self.canvas.coords(self.other_users[idx-1])
+                    self.canvas.coords(self.other_users[idx-1],oc[0]-RADIUS,oc[1],oc[2]-RADIUS, oc[3])
+                    oc = self.canvas.coords(self.circle)
+                    self.canvas.coords(self.circle,oc[0]+RADIUS,oc[1],oc[2]+RADIUS, oc[3])
+                else:
+                    oc = self.canvas.coords(self.other_users[idx-1])
+                    self.canvas.coords(self.other_users[idx-1],oc[0]-RADIUS,oc[1],oc[2]-RADIUS, oc[3])
+                    oc = self.canvas.coords(i)
+                    self.canvas.coords(i,oc[0]+RADIUS,oc[1],oc[2]+RADIUS, oc[3])
+
     def update_positions(self,positions=None):
         if len(positions) >0:
             self.delete_other_users()
@@ -82,13 +111,13 @@ class window(tk.Frame):
                             continue
                         else:
                             tmp_room = self.rooms[i["RoomID"]]
-                            print(len(tmp_room.workers))
+                            #print(len(tmp_room.workers))
                             cntr = tmp_room.center
                             self.canvas.coords(self.circle,cntr[0]-RADIUS,cntr[1]-RADIUS,cntr[0]+RADIUS,cntr[1]+RADIUS)
                             this_user.move_to(tmp_room)
                     else:
                         tmp_room = self.rooms[i["RoomID"]]
-                        print(len(tmp_room.workers))
+                        #print(len(tmp_room.workers))
                         user_symbol = self.canvas.create_oval(tmp_room.center[0]-RADIUS, tmp_room.center[1]-RADIUS,tmp_room.center[0]+RADIUS, tmp_room.center[1]+RADIUS, fill="green")
                         self.other_users.append(user_symbol)
                         this_user.move_to(tmp_room)
@@ -96,7 +125,7 @@ class window(tk.Frame):
                     #TODO ezt még jobban ki dolgozni...
                     print("Starting video call with" + self.rooms[i["RoomID"]].workers[0])
                     this_user.move_to(i["RoomID"])"""
-
+            self.fix_positions()
     def create_rooms(self): #init rooms
         self.rooms = []
         room1 = Room(0,0,250,170,self.ratio)
@@ -154,6 +183,7 @@ class window(tk.Frame):
                     self.you.move_to(i)
                     self.my_label.config(text=f"{self.you.name} is in room: {self.you.room.id}")
                     print(f"{self.you.name} is in room: {self.you.room.id}")
+                    self.fix_positions()
                     break
             self.isMoving = False
             self.unsaved_movement = True
