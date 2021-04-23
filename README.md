@@ -32,7 +32,7 @@ We would like to present to you our **idea of an Augmented Reality Office applic
 
 ## Presentation
 
-*List any links to your presentation or additional materials that you want to share with the judges.*
+https://youtu.be/HT5upyGcN8Y
 
 ## Challenges and accomplishments
 
