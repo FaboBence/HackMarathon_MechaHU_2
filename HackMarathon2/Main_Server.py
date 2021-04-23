@@ -9,30 +9,43 @@ def accept_connection(sock):
 	events = selectors.EVENT_READ #| selectors.EVENT_WRITE
 	message = Message_Server.Message(sel, conn, addr, Name_Room_dict)
 	sel.register(conn, events, data=message)
-def print_schedule(Week_schedule):
+def print_schedule(Week_schedule, Week_matrix):
 	print()
 	print("--------------------------------------")
-	for i in range(len(Week_schedule)):
+	for i in range(len(Week_matrix)):
 		if i==0:
 			print("Monday")
 		if i==1:
-			print("Thuesday")
+			print("Tuesday")
 		if i==2:
 			print("Wednesday")
 		if i==3:
 			print("Thursday")
 		if i==4:
 			print("Friday")
-		print("   8  9 10 11 12 13 14 15 16 17")
-		print(Week_schedule[i])
+		print("              8       9      10      11      12      13      14      15      16      17")
+		for j in range(len(Week_matrix[i])):
+			personal_schedule=[]
+			for col in range(Week_schedule[i].shape[1]):
+				present=False
+				for row in range(Week_schedule[i].shape[0]):
+					if Week_schedule[i][row][col]==Week_matrix[i][j][0]:
+						personal_schedule.append("No."+str(row))
+						present=True
+				if present==False:
+					personal_schedule.append("Home")
+
+			
+			print("{0:^10}".format(Week_matrix[i][j][1]),end='')
+			print(personal_schedule)
+			print()
+		print("--------------------------------------")
 		print()
-	print("--------------------------------------")
-	print()
 # Creating schedule
 day = 4 # Monday: 0, Tuesday: 1, Wednesday: 2, Thursday: 3, Friday: 4
 hour = 17
-Week_Schedule, dataframe = Office_allocation.office_allocation()
-print_schedule(Week_Schedule)
+Week_Schedule, dataframe,Week_matrix = Office_allocation.office_allocation()
+print_schedule(Week_Schedule,Week_matrix)
 dataframe = dataframe.to_numpy()
 Name_Room_dict = {}
 for i,room in enumerate(Week_Schedule[day]):

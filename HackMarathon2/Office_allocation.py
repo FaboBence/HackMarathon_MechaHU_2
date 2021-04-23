@@ -144,4 +144,4 @@ def office_allocation():
         Week_schedule.append(tmp_schedule)
         #Week_schedule.append(np.random.randint(-1,len(day),(df_rooms.shape[0],WORK_FINISH-WORK_BEGIN)))
 
-    return Week_schedule,df_regs
+    return Week_schedule,df_regs,Week_matrix
