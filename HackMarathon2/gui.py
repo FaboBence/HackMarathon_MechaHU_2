@@ -32,6 +32,7 @@ class window(tk.Frame): #This is the main application
         self.create_rooms()
         self.create_users()
         self.other_users = []
+        self.other_labels = []
         #self.canvas.bind("<Configure>", self.on_resize)
     
     def get_user_by_name(self, name):
@@ -43,6 +44,8 @@ class window(tk.Frame): #This is the main application
     def delete_other_users(self):#Removing previous state befor refreshing
         try:
             for i in self.other_users:
+                self.canvas.delete(i)
+            for i in self.other_labels:
                 self.canvas.delete(i)
             self.other_users = []
         except:
@@ -90,6 +93,7 @@ class window(tk.Frame): #This is the main application
                     tmp_room = self.rooms[i["RoomID"]]
                     user_symbol = self.canvas.create_oval(tmp_room.center[0]-RADIUS, tmp_room.center[1]-RADIUS,tmp_room.center[0]+RADIUS, tmp_room.center[1]+RADIUS, fill="green")
                     self.other_users.append(user_symbol)
+                    self.other_labels.append(self.canvas.create_text(tmp_room.center[0],tmp_room.center[1], text=i["Name"][0], font = "Helvetica 18"))
                     self.users.append(new_user)
                 elif i["RoomID"] == this_user.room.id:
                     if i["Name"] == self.name:
@@ -97,6 +101,7 @@ class window(tk.Frame): #This is the main application
                     else:
                         tmp_room = self.rooms[i["RoomID"]]
                         user_symbol = self.canvas.create_oval(tmp_room.center[0]-RADIUS, tmp_room.center[1]-RADIUS,tmp_room.center[0]+RADIUS, tmp_room.center[1]+RADIUS, fill="green")
+                        self.other_labels.append(self.canvas.create_text(tmp_room.center[0],tmp_room.center[1], text=i["Name"][0],font = "Helvetica 18"))
                         self.other_users.append(user_symbol)
                 else:
                     if i["Name"] == self.name:
@@ -110,6 +115,7 @@ class window(tk.Frame): #This is the main application
                     else:
                         tmp_room = self.rooms[i["RoomID"]]
                         user_symbol = self.canvas.create_oval(tmp_room.center[0]-RADIUS, tmp_room.center[1]-RADIUS,tmp_room.center[0]+RADIUS, tmp_room.center[1]+RADIUS, fill="green")
+                        self.other_labels.append(self.canvas.create_text(tmp_room.center[0],tmp_room.center[1], text=i["Name"][0],font = "Helvetica 18"))
                         self.other_users.append(user_symbol)
                         this_user.move_to(tmp_room)
             self.fix_positions()
