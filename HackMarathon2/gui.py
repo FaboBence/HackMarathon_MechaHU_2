@@ -16,7 +16,7 @@ class window(tk.Frame): #This is the main application
         self.h=self.root.winfo_screenheight()
         root.minsize(width=200, height=200)
         self.isMoving = False
-        self.img = Image.open('OpenOffice.png')
+        self.img = Image.open('AugmentedRealityOffice.png')
         [imageSizeWidth, imageSizeHeight] = self.img.size
         self.ratio = min(self.w/imageSizeWidth,self.h/imageSizeHeight) 
         img = self.img.resize((int(imageSizeWidth*self.ratio), int(imageSizeHeight*self.ratio)), Image.ANTIALIAS)
@@ -24,13 +24,14 @@ class window(tk.Frame): #This is the main application
         self.canvas = tk.Canvas(width = self.w, height=self.h, bg='white')
         self.canvas.pack(expand=tk.YES)
         self.bg_img = self.canvas.create_image(0,0,image = image, anchor=tk.NW)
-        self.circle = self.canvas.create_oval(20,20,60,60,fill="blue")
+        self.create_rooms()
+        self.create_users()
+        self.circle = self.canvas.create_oval(self.rooms[0].center[0]-RADIUS,self.rooms[0].center[1]-RADIUS,self.rooms[0].center[0]+RADIUS,self.rooms[0].center[1]+RADIUS,fill="blue")
 
         
         self.canvas.bind('<B1-Motion>',self.move) #"drag-and-drop" action
         self.canvas.bind('<ButtonRelease-1>',self.release) #when you relase the left mose button
-        self.create_rooms()
-        self.create_users()
+        
         self.other_users = []
         self.other_labels = []
         #self.canvas.bind("<Configure>", self.on_resize)
@@ -121,11 +122,13 @@ class window(tk.Frame): #This is the main application
             self.fix_positions()
     def create_rooms(self): #init rooms
         self.rooms = []
+        room0 = Room(250,15,400,160,self.ratio)
         room1 = Room(0,0,250,170,self.ratio)
-        room2 = Room(250,15,400,160,self.ratio)
-        room3 = Room(0,170,250,400,self.ratio)
+        room2 = Room(790,110,920,200,self.ratio) #online
+        room3 = Room(230,280,420,480,self.ratio)
         room4 = Room(250,170,500,500, self.ratio)
-        room5 = Room(500,0,700,170, self.ratio)
+        room5 = Room(510,0,630,170, self.ratio)
+        self.rooms.append(room0)
         self.rooms.append(room1)
         self.rooms.append(room2)
         self.rooms.append(room3)
@@ -270,9 +273,9 @@ class video_call(tk.Frame):#The frame for the video call (currently it only read
         else:
             print("An error occured...")
         self.l1=tk.Label(root, image=img1)
-        self.l1.pack(side = tk.LEFT, padx=(75,0))
+        self.l1.pack(side = tk.LEFT, padx=(50,0))
         self.l2=tk.Label(root, image=img2)
-        self.l2.pack(side=tk.RIGHT, padx=(0,75))
+        self.l2.pack(side=tk.RIGHT, padx=(0,50))
         self.button = tk.Button(self, text="Finish call",width=10, bg='red', fg='white', command= lambda: finish_call(self,mainWindow))
         self.button.pack(pady=(700,0))
         self.root.after(1000,self.refresh)
