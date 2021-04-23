@@ -31,7 +31,7 @@ class Message:
 			self.write()
 
 	def read(self):
-		print('Read') # DEBUG
+		#print('Read') # DEBUG
 		try:
 			data = self.sock.recv(1024)
 		except BlockingIOError:
@@ -45,7 +45,7 @@ class Message:
 			self._decode_messagelen()
 			if self._messagelen is not None:
 				self._decode_message()
-			print("  ",self.Name,self.RoomID) # DEBUG
+			#print("  ",self.Name,self.RoomID) # DEBUG
 			self._set_selector_events_mask("w")
 
 	def _decode_messagelen(self):
@@ -64,7 +64,7 @@ class Message:
 				self.RoomID = msg_dict.get("RoomID")
 
 	def write(self):
-		print('Writing to', self.addr) # DEBUG
+		#print('Writing to', self.addr) # DEBUG
 		self._encode_message()
 		try:
 			sent = self.sock.send(self._send_buffer)
@@ -85,14 +85,14 @@ class Message:
 					if User.schedule.get(Name):
 						User.RoomID = User.schedule.get(Name)
 				tmp_dict = {"Name": Name, "RoomID": User.RoomID}
-				print("  ",tmp_dict) # DEBUG
+				#print("  ",tmp_dict) # DEBUG
 				tmp_list.append(tmp_dict)
 		msg = json.dumps(tmp_list, ensure_ascii=False).encode('utf-8')
 		self._send_buffer += struct.pack(">H",len(msg)) + msg
 		self.just_connected = False
 
 	def close(self):
-		print("Closing connection to ", self.addr)
+		#print("Closing connection to ", self.addr)
 		try:
 			self.selector.unregister(self.sock)
 			self.sock.close()
