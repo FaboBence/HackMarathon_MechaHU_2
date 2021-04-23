@@ -9,11 +9,30 @@ def accept_connection(sock):
 	events = selectors.EVENT_READ #| selectors.EVENT_WRITE
 	message = Message_Server.Message(sel, conn, addr, Name_Room_dict)
 	sel.register(conn, events, data=message)
-
+def print_schedule(Week_schedule):
+	print()
+	print("--------------------------------------")
+	for i in range(len(Week_schedule)):
+		if i==0:
+			print("Monday")
+		if i==1:
+			print("Thuesday")
+		if i==2:
+			print("Wednesday")
+		if i==3:
+			print("Thursday")
+		if i==4:
+			print("Friday")
+		print("   8  9 10 11 12 13 14 15 16 17")
+		print(Week_schedule[i])
+		print()
+	print("--------------------------------------")
+	print()
 # Creating schedule
 day = 4 # Monday: 0, Tuesday: 1, Wednesday: 2, Thursday: 3, Friday: 4
 hour = 17
 Week_Schedule, dataframe = Office_allocation.office_allocation()
+print_schedule(Week_Schedule)
 dataframe = dataframe.to_numpy()
 Name_Room_dict = {}
 for i,room in enumerate(Week_Schedule[day]):
