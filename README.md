@@ -1,4 +1,4 @@
-# Hack Kosice Marathon: Your project name
+# Hack Kosice Marathon: Augmented Reality Office
 
 ## Team
 
@@ -10,6 +10,10 @@
 - Mihály Makovsky, Budapest University of Technology and Economics
 - Gellért Csapodi, Budapest University of Technology and Economics
 
+## Foreword
+
+We would like to present to you our **idea of an Augmented Reality Office application**.😁 Its important to note that the core of the project is the idea, and the program that we built is only for demonstrational purposes with limited functionality. 🚧
+
 ## Description
 
   Our project focuses on two important areas of **hybrid office systems**: how to allocate office resources and how to make hybrid working more efficient. 🏢
@@ -18,9 +22,9 @@
 
   On the other hand, it's hard to make work efficient when some colleagues are present in the office, while others are at home. What's more, the main drawback of home offices is that you don't see what others are working on and you can't **talk to your colleagues quickly**, without having to organize meetings. We solve both of these problems with an innovative **augmented reality office**, where all workers can log in and show their progress and location. Whether you are at home or in the office, you can place your avatar in a room and update your status. If you want to talk to a colleague, you can take a look at the map of the office to find out where he/she currently is. If they are available, you can simply place your avatar next to him to **start videochat immediately** without having to schedule meetings.👻🧑‍💼
 
-  These two ideas, office allocation and AR-office are put together, so that **companies can schedule their weeks, allocate space, track the progress and current working status of the colleagues, and videochat easily with the same programm, featuring machine intelligence and a comfortable GUI.** 🏢
+  These two ideas, office allocation and AR-office are put together, so that **companies can schedule their weeks, allocate space, track the progress and current working status of the colleagues, and videochat easily with the same program.** 💻
 
-## Protoype
+## Prototype
 
   During the weekend, all colleagues can register for office space for the next week. They have to type in on which day and in which time intervall they want to be present in the office, and with how many fellow colleagues they want to meet in the office. The office allocation algorithm creates a weekly schedule for the next week from the data of the registrations which prevents overcrowded rooms and ensures the meeting of people who want to work together. The algorithm creates many random schedule-plans, chooses the best of them via a predefined fitness function and with fine local search. It finds the optimal one and transfers the schedule to the program.
 
