@@ -10,7 +10,7 @@ class window(tk.Frame):
         self.root = root
         self.name = name
         self.unsaved_movement = False
-        root.title("Online Office")
+        root.title("Augmented Reality Office")
         #root.attributes('-fullscreen', True)
         #root.geometry(f"{w}x{h}")
         root.state('zoomed')
@@ -175,6 +175,7 @@ class window(tk.Frame):
             self.isMoving = True
         #!self.update_positions([self.my_position(), {"Name": "Jim", "RoomID":2},{"Name": "Joe", "RoomID":1}])
     def release(self,e):
+        start_call = None
         if self.isMoving:
             #print(e)
             for i in self.rooms:
@@ -183,13 +184,20 @@ class window(tk.Frame):
                     self.you.move_to(i)
                     self.my_label.config(text=f"{self.you.name} is in room: {self.you.room.id}")
                     print(f"{self.you.name} is in room: {self.you.room.id}")
+                    if len(self.you.room.workers) >1:
+                        if self.you.room.workers[0].id == self.you.id:
+                            start_call = self.you.room.workers[1]
+                        else:
+                            start_call = self.you.room.workers[0]
                     self.fix_positions()
                     break
             self.isMoving = False
             self.unsaved_movement = True
+            if start_call is not None:
+                start_video(self.root,self,start_call.name)
         #!print(self.my_position())
         #!self.update_positions([self.my_position(), {"Name": "Joe", "RoomID":1}])
-        #!start_video()
+        #!start_video(self.root,self,"start_call.name")
 class Room():
     id = 0
     def __init__(self,tlx,tly,brx,bry,ratio=1):
@@ -255,48 +263,71 @@ class name_input_window(tk.Frame):
             print("You MUST enter a name!")
 
 class video_call(tk.Frame):
-    def __init__(self, root):
-        super().__init__(root)
+    def __init__(self, root,mainWindow, target):
+        bg_col = '#E1C699'
+        super().__init__(root, bg=bg_col)
+        self.target = target
         self.root = root
-        self.cap = cv2.VideoCapture(0)
-        ret, frame = self.cap.read()
-        img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        if ret:
-            img = Image.fromarray(img)
-            img = ImageTk.PhotoImage(img)
+        self.mainWindow = mainWindow
+        self.cap1 = cv2.VideoCapture("Bence_videoChat.avi")
+        self.cap2 = cv2.VideoCapture("Misi_videoChat.avi")
+        ret1, frame1 = self.cap1.read()
+        ret2, frame2 = self.cap2.read()
+        img1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2RGB)
+        img2= cv2.cvtColor(frame2, cv2.COLOR_BGR2RGB)
+        if ret1:
+            img1 = Image.fromarray(img1)
+            img1 = ImageTk.PhotoImage(img1)
         else:
             print("An error occured...")
-        self.l2=tk.Label(root, image=img)
-        self.l2.pack()
-        self.button = tk.Button(self, text="Finish call", command= lambda: finish_call(self))
-        self.button.pack()
+        if ret2:
+            img2 = Image.fromarray(img2)
+            img2 = ImageTk.PhotoImage(img2)
+        else:
+            print("An error occured...")
+        self.l1=tk.Label(root,bg=bg_col, image=img1)
+        self.l1.pack(side = tk.LEFT, padx=(75,0))
+        self.l2=tk.Label(root, image=img2)
+        self.l2.pack(side=tk.RIGHT, padx=(0,75))
+        self.button = tk.Button(self, text="Finish call",width=10, bg='red', fg='white', command= lambda: finish_call(self,mainWindow))
+        #self.button.place(anchor=tk.N,relx=0.5, rely=0.95, width=200,height=50)
+        self.button.pack(pady=(700,0))
         self.root.after(1000,self.refresh)
 
     def refresh(self):
-        print("ping")
-        ret, frame = self.cap.read()
-        img = cv2.cvtColor(frame, cv2.COLOR_BGR2RGB)
-        if ret:
-            img = Image.fromarray(img)
-            img = ImageTk.PhotoImage(img)
-            self.l2.configure(image=img)
-            self.l2.image = img
+        #print("ping")
+        ret1, frame1 = self.cap1.read()
+        img1 = cv2.cvtColor(frame1, cv2.COLOR_BGR2RGB)
+        ret2, frame2 = self.cap2.read()
+        img2 = cv2.cvtColor(frame2, cv2.COLOR_BGR2RGB)
+        if ret1:
+            img1 = Image.fromarray(img1)
+            img1 = ImageTk.PhotoImage(img1)
+            self.l1.configure(image=img1)
+            self.l1.image = img1
+        else:
+            print("An error occured...")
+        if ret2:
+            img2 = Image.fromarray(img2)
+            img2 = ImageTk.PhotoImage(img2)
+            self.l2.configure(image=img2)
+            self.l2.image = img2
         else:
             print("An error occured...")
         self.root.after(20,self.refresh)
 
-def start_video():
-    global mainWindow, root, video_frame
+def start_video(root, mainWindow, target):
     frame = mainWindow
     frame.canvas.pack_forget()
     frame.pack_forget()
-    video_frame = video_call(root)
+    video_frame = video_call(root,mainWindow, target)
     video_frame.pack()
 
-def finish_call(v_frame):
-    global mainWindow, root
+def finish_call( v_frame,mainWindow):
     frame = v_frame
-    frame.cap.release()
+    frame.cap1.release()
+    frame.cap2.release()
+    frame.l1.pack_forget()
     frame.l2.pack_forget()
     frame.pack_forget()
     #frame.pack_forget()
