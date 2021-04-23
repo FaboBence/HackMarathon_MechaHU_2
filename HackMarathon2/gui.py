@@ -264,11 +264,15 @@ class video_call(tk.Frame):#The frame for the video call (currently it only read
         img2= cv2.cvtColor(frame2, cv2.COLOR_BGR2RGB)
         if ret1:
             img1 = Image.fromarray(img1)
+            self.w=int(img1.size[0]/2)
+            self.h=int(img1.size[1]/2)
+            img1 = img1.resize((self.w, self.h), Image.ANTIALIAS)
             img1 = ImageTk.PhotoImage(img1)
         else:
             print("An error occured...")
         if ret2:
             img2 = Image.fromarray(img2)
+            img2 = img2.resize((self.w, self.h), Image.ANTIALIAS)
             img2 = ImageTk.PhotoImage(img2)
         else:
             print("An error occured...")
@@ -287,6 +291,7 @@ class video_call(tk.Frame):#The frame for the video call (currently it only read
         img2 = cv2.cvtColor(frame2, cv2.COLOR_BGR2RGB)
         if ret1:
             img1 = Image.fromarray(img1)
+            img1 = img1.resize((self.w, self.h), Image.ANTIALIAS)
             img1 = ImageTk.PhotoImage(img1)
             self.l1.configure(image=img1)
             self.l1.image = img1
@@ -294,6 +299,7 @@ class video_call(tk.Frame):#The frame for the video call (currently it only read
             print("An error occured...")
         if ret2:
             img2 = Image.fromarray(img2)
+            img2 = img2.resize((self.w, self.h), Image.ANTIALIAS)
             img2 = ImageTk.PhotoImage(img2)
             self.l2.configure(image=img2)
             self.l2.image = img2
