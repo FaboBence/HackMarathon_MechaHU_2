@@ -12,23 +12,23 @@
 
 ## Foreword
 
-We would like to present to you our **idea of an Augmented Reality Office application**.😁 Its important to note that the core of the project is the idea, and the program that we built is only for demonstrational purposes with limited functionality. 🚧
+We would like to present our **Augmented Reality Office application**.😁 It is important to note that our current version operates with limited functionality yet. 🚧
 
 ## Description
 
-  Our project focuses on two important areas of **hybrid office systems**: how to allocate office resources and how to make hybrid working more efficient. 🏢
+  Our project focuses on two important areas of **hybrid office systems**: how to allocate office resources optimally and how to set up hybrid working more efficient. 🏢
 
-  As a result of the **Covid home-office wave**, more and more companies are likely to decide to reduce available offices spaces in order to save money, and only a part of the workers are going to work in the real offices, the majority will work remotely. Making flexible weekly schedules is going to be more and more improtant, companies'll have to find a way to allocate office spaces to avoid crowding in the reduced offices spaces, but prevent unused office spaces which waste energy and money. Our machine intelliegence 🧠 solution provides an algorithm which **creates a weekly schedule** for the available office spaces. 📋📋
+  As a result of the **Covid home-office wave**, increasing number of companies are forced to reduce available offices spaces in order to save money, and only a part of the workers are allowed to work physically in the office, while the majority will work remotely. Thus flexible weekly schedules become more and more important to avoid crowding in the reduced office spaces and minimising unused spaces to prevent wasting energy and money. Our machine intelligence 🧠 solution provides an algorithm which **creates a weekly schedule** for optimal allocation of the available office spaces. 📋📋
 
-  On the other hand, it's hard to make work efficient when some colleagues are present in the office, while others are at home. What's more, the main drawback of home offices is that you don't see what others are working on and you can't **talk to your colleagues quickly**, without having to organize meetings. We solve both of these problems with an innovative **augmented reality office**, where all workers can log in and show their progress and location. Whether you are at home or in the office, you can place your avatar in a room and update your status. If you want to talk to a colleague, you can take a look at the map of the office to find out where he/she currently is. If they are available, you can simply place your avatar next to him to **start videochat immediately** without having to schedule meetings.👻🧑‍💼
+  Our second goal was to synchronise physical and home office work. The mayor challenge is providing a flexible communication channel between groups in the office and home workers. We solve this problem with an innovative **augmented reality office** application, where all workers can log in the same virtual space that mirrors the real office and show their physical location with an avatar. Full virtual participants can use the same space to join the selected group via placing their similar avatar in a room and **start videochat and share progress immediately** even without having a prescheduled meetings.👻🧑‍💼
 
-  These two ideas, office allocation and AR-office are put together, so that **companies can schedule their weeks, allocate space, track the progress and current working status of the colleagues, and videochat easily with the same program.** 💻
+  These two ideas, office space allocation and AR-office are put together, so that **companies can schedule their weeks, allocate space, track the progress and current working status of the colleagues, and videochat easily within the same application.** 💻
 
 ## Prototype
 
-  During the weekend, all colleagues can register for office space for the next week. They have to type in on which day and in which time intervall they want to be present in the office, and with how many fellow colleagues they want to meet in the office. The office allocation algorithm creates a weekly schedule for the next week from the data of the registrations which prevents overcrowded rooms and ensures the meeting of people who want to work together. The algorithm creates many random schedule-plans, chooses the best of them via a predefined fitness function and with fine local search. It finds the optimal one and transfers the schedule to the program.
+  During the weekend, all colleagues can register for office space for the next week. They can define the day and time intervall they want to be present in the office, and with how many fellow colleagues they want to work together physically in the office. The office allocation algorithm creates a weekly schedule for the next week from the data of the registrations which prevents and overcrowded rooms and ensures the meeting of people who want to work together. The algorithm creates many random schedule-plans, chooses the best via a predefined fitness function and with fine local search. 
 
-  The program is a **server-client communication based graphical user interface**, which works as an **augmented reality office with real and virtual office rooms**. If a colleague logs in, he'/she's avatar is placed into the room in which he should be according to the schedule, or in a virtual room if he/she is working from home. You can see the location of all your logged-in colleagues. For example, if someone working from home wants to ask a quick question from a fellow colleague, he/she simply has to **grab his avatar and place it into the rooms in which the other one is working. Then, the program starts a videchat immediately between the two persons, making communication easy even in hybrid offices.** If you want to check whether there are free rooms available, you can simply take a look at the augmented reality office GUI to find free spaces.
+  The program is a **server-client communication based graphical user interface**, which works as an **augmented reality office with real and virtual office rooms**. Loged in physical office users have avatars placed into prescheduled rooms, and home office workers in a virtual rooms. All users location is visible for the others. For example, if a home office user wants to ask a quick question from a fellow colleague, he/she simply has to **grab his avatar and place it into the appropriate room. Then, the program starts a videchat immediately between participants, making communication easy even in hybrid offices.** Also available free rooms are evident at glance of the augmented reality office GUI to start a brand new workgroup.
 
 ## Presentation
 
@@ -36,8 +36,8 @@ https://youtu.be/HT5upyGcN8Y
 
 ## Challenges and accomplishments
 
-During the making of our project we had to learn a lot of new concepts and solve a plethera of technical problems, this way we gained precious experience along the way.
-- While creating the office allocation algortihm, we got to know many interesting algortihm-possibilities and modern methods to implement machine intelligence for a certain problem.
+During the project work we had to learn a lot of new concepts and solve a plethera of technical problems, this way we gained precious experience along the way.
+- To create the office allocation algorithm, we had to implement artificial intelligence.
 - The creation of the application was a real challenge, we had to understand and use:
     -  Python ```sockets``` for the server-client communication
     -  ```Selectors``` to make the sockets non-blocking
